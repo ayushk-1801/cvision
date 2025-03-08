@@ -174,6 +174,7 @@ exports.Prisma.JobScalarFieldEnum = {
   contactEmail: 'contactEmail',
   applicationUrl: 'applicationUrl',
   isRemote: 'isRemote',
+  applicationDeadline: 'applicationDeadline',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

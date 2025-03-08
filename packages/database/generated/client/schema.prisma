@@ -74,25 +74,26 @@ model Verification {
 }
 
 model Job {
-  id             String        @id @default(uuid())
-  title          String
-  company        String
-  location       String
-  description    String
-  requirements   String
-  salary         String?
-  contactEmail   String
-  applicationUrl String?
-  isRemote       Boolean       @default(false)
-  isActive       Boolean       @default(true)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  expiresAt      DateTime?
-  recruiterId    String
-  recruiter      User          @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
-  applications   Application[]
-  applicants     Json?
-  topApplicants  String[]
+  id                  String        @id @default(uuid())
+  title               String
+  company             String
+  location            String
+  description         String
+  requirements        String
+  salary              String?
+  contactEmail        String
+  applicationUrl      String?
+  isRemote            Boolean       @default(false)
+  applicationDeadline DateTime?
+  isActive            Boolean       @default(true)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  expiresAt           DateTime?
+  recruiterId         String
+  recruiter           User          @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  applications        Application[]
+  applicants          Json?
+  topApplicants       String[]
 
   industry        String?
   jobType         String? // Full-time, Part-time, Contract, etc.

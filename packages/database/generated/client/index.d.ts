@@ -5877,6 +5877,7 @@ export namespace Prisma {
     contactEmail: string | null
     applicationUrl: string | null
     isRemote: boolean | null
+    applicationDeadline: Date | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5898,6 +5899,7 @@ export namespace Prisma {
     contactEmail: string | null
     applicationUrl: string | null
     isRemote: boolean | null
+    applicationDeadline: Date | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -5919,6 +5921,7 @@ export namespace Prisma {
     contactEmail: number
     applicationUrl: number
     isRemote: number
+    applicationDeadline: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -5944,6 +5947,7 @@ export namespace Prisma {
     contactEmail?: true
     applicationUrl?: true
     isRemote?: true
+    applicationDeadline?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -5965,6 +5969,7 @@ export namespace Prisma {
     contactEmail?: true
     applicationUrl?: true
     isRemote?: true
+    applicationDeadline?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -5986,6 +5991,7 @@ export namespace Prisma {
     contactEmail?: true
     applicationUrl?: true
     isRemote?: true
+    applicationDeadline?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -6082,6 +6088,7 @@ export namespace Prisma {
     contactEmail: string
     applicationUrl: string | null
     isRemote: boolean
+    applicationDeadline: Date | null
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -6122,6 +6129,7 @@ export namespace Prisma {
     contactEmail?: boolean
     applicationUrl?: boolean
     isRemote?: boolean
+    applicationDeadline?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6148,6 +6156,7 @@ export namespace Prisma {
     contactEmail?: boolean
     applicationUrl?: boolean
     isRemote?: boolean
+    applicationDeadline?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6172,6 +6181,7 @@ export namespace Prisma {
     contactEmail?: boolean
     applicationUrl?: boolean
     isRemote?: boolean
+    applicationDeadline?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6196,6 +6206,7 @@ export namespace Prisma {
     contactEmail?: boolean
     applicationUrl?: boolean
     isRemote?: boolean
+    applicationDeadline?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6208,7 +6219,7 @@ export namespace Prisma {
     experienceLevel?: boolean
   }
 
-  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "company" | "location" | "description" | "requirements" | "salary" | "contactEmail" | "applicationUrl" | "isRemote" | "isActive" | "createdAt" | "updatedAt" | "expiresAt" | "recruiterId" | "applicants" | "topApplicants" | "industry" | "jobType" | "experienceLevel", ExtArgs["result"]["job"]>
+  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "company" | "location" | "description" | "requirements" | "salary" | "contactEmail" | "applicationUrl" | "isRemote" | "applicationDeadline" | "isActive" | "createdAt" | "updatedAt" | "expiresAt" | "recruiterId" | "applicants" | "topApplicants" | "industry" | "jobType" | "experienceLevel", ExtArgs["result"]["job"]>
   export type JobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     recruiter?: boolean | UserDefaultArgs<ExtArgs>
     applications?: boolean | Job$applicationsArgs<ExtArgs>
@@ -6238,6 +6249,7 @@ export namespace Prisma {
       contactEmail: string
       applicationUrl: string | null
       isRemote: boolean
+      applicationDeadline: Date | null
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -6683,6 +6695,7 @@ export namespace Prisma {
     readonly contactEmail: FieldRef<"Job", 'String'>
     readonly applicationUrl: FieldRef<"Job", 'String'>
     readonly isRemote: FieldRef<"Job", 'Boolean'>
+    readonly applicationDeadline: FieldRef<"Job", 'DateTime'>
     readonly isActive: FieldRef<"Job", 'Boolean'>
     readonly createdAt: FieldRef<"Job", 'DateTime'>
     readonly updatedAt: FieldRef<"Job", 'DateTime'>
@@ -8345,6 +8358,7 @@ export namespace Prisma {
     contactEmail: 'contactEmail',
     applicationUrl: 'applicationUrl',
     isRemote: 'isRemote',
+    applicationDeadline: 'applicationDeadline',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -8798,6 +8812,7 @@ export namespace Prisma {
     contactEmail?: StringFilter<"Job"> | string
     applicationUrl?: StringNullableFilter<"Job"> | string | null
     isRemote?: BoolFilter<"Job"> | boolean
+    applicationDeadline?: DateTimeNullableFilter<"Job"> | Date | string | null
     isActive?: BoolFilter<"Job"> | boolean
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
@@ -8823,6 +8838,7 @@ export namespace Prisma {
     contactEmail?: SortOrder
     applicationUrl?: SortOrderInput | SortOrder
     isRemote?: SortOrder
+    applicationDeadline?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8851,6 +8867,7 @@ export namespace Prisma {
     contactEmail?: StringFilter<"Job"> | string
     applicationUrl?: StringNullableFilter<"Job"> | string | null
     isRemote?: BoolFilter<"Job"> | boolean
+    applicationDeadline?: DateTimeNullableFilter<"Job"> | Date | string | null
     isActive?: BoolFilter<"Job"> | boolean
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
@@ -8876,6 +8893,7 @@ export namespace Prisma {
     contactEmail?: SortOrder
     applicationUrl?: SortOrderInput | SortOrder
     isRemote?: SortOrder
+    applicationDeadline?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8905,6 +8923,7 @@ export namespace Prisma {
     contactEmail?: StringWithAggregatesFilter<"Job"> | string
     applicationUrl?: StringNullableWithAggregatesFilter<"Job"> | string | null
     isRemote?: BoolWithAggregatesFilter<"Job"> | boolean
+    applicationDeadline?: DateTimeNullableWithAggregatesFilter<"Job"> | Date | string | null
     isActive?: BoolWithAggregatesFilter<"Job"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
@@ -9348,6 +9367,7 @@ export namespace Prisma {
     contactEmail: string
     applicationUrl?: string | null
     isRemote?: boolean
+    applicationDeadline?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9372,6 +9392,7 @@ export namespace Prisma {
     contactEmail: string
     applicationUrl?: string | null
     isRemote?: boolean
+    applicationDeadline?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9396,6 +9417,7 @@ export namespace Prisma {
     contactEmail?: StringFieldUpdateOperationsInput | string
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9420,6 +9442,7 @@ export namespace Prisma {
     contactEmail?: StringFieldUpdateOperationsInput | string
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9444,6 +9467,7 @@ export namespace Prisma {
     contactEmail: string
     applicationUrl?: string | null
     isRemote?: boolean
+    applicationDeadline?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9467,6 +9491,7 @@ export namespace Prisma {
     contactEmail?: StringFieldUpdateOperationsInput | string
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9489,6 +9514,7 @@ export namespace Prisma {
     contactEmail?: StringFieldUpdateOperationsInput | string
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9949,6 +9975,7 @@ export namespace Prisma {
     contactEmail?: SortOrder
     applicationUrl?: SortOrder
     isRemote?: SortOrder
+    applicationDeadline?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9972,6 +9999,7 @@ export namespace Prisma {
     contactEmail?: SortOrder
     applicationUrl?: SortOrder
     isRemote?: SortOrder
+    applicationDeadline?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9993,6 +10021,7 @@ export namespace Prisma {
     contactEmail?: SortOrder
     applicationUrl?: SortOrder
     isRemote?: SortOrder
+    applicationDeadline?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10638,6 +10667,7 @@ export namespace Prisma {
     contactEmail: string
     applicationUrl?: string | null
     isRemote?: boolean
+    applicationDeadline?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10661,6 +10691,7 @@ export namespace Prisma {
     contactEmail: string
     applicationUrl?: string | null
     isRemote?: boolean
+    applicationDeadline?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10812,6 +10843,7 @@ export namespace Prisma {
     contactEmail?: StringFilter<"Job"> | string
     applicationUrl?: StringNullableFilter<"Job"> | string | null
     isRemote?: BoolFilter<"Job"> | boolean
+    applicationDeadline?: DateTimeNullableFilter<"Job"> | Date | string | null
     isActive?: BoolFilter<"Job"> | boolean
     createdAt?: DateTimeFilter<"Job"> | Date | string
     updatedAt?: DateTimeFilter<"Job"> | Date | string
@@ -11121,6 +11153,7 @@ export namespace Prisma {
     contactEmail: string
     applicationUrl?: string | null
     isRemote?: boolean
+    applicationDeadline?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11144,6 +11177,7 @@ export namespace Prisma {
     contactEmail: string
     applicationUrl?: string | null
     isRemote?: boolean
+    applicationDeadline?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11214,6 +11248,7 @@ export namespace Prisma {
     contactEmail?: StringFieldUpdateOperationsInput | string
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11237,6 +11272,7 @@ export namespace Prisma {
     contactEmail?: StringFieldUpdateOperationsInput | string
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11322,6 +11358,7 @@ export namespace Prisma {
     contactEmail: string
     applicationUrl?: string | null
     isRemote?: boolean
+    applicationDeadline?: Date | string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11431,6 +11468,7 @@ export namespace Prisma {
     contactEmail?: StringFieldUpdateOperationsInput | string
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11454,6 +11492,7 @@ export namespace Prisma {
     contactEmail?: StringFieldUpdateOperationsInput | string
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11477,6 +11516,7 @@ export namespace Prisma {
     contactEmail?: StringFieldUpdateOperationsInput | string
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
+    applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
