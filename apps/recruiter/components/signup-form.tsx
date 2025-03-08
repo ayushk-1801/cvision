@@ -5,26 +5,27 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signIn, signInWithGoogle } from "@/server/users";
+import { signUp, signInWithGoogle } from "@/server/users";
 
-export function SigninForm({
+export function SignupForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!name || !email || !password) return;
     
     try {
       setIsLoading(true);
-      await signIn(email, password);
-      window.location.href = '/'; // Redirect to home page after successful sign in
+      await signUp(email, password, name);
+      // Optionally redirect or show success message
     } catch (error) {
-      console.error("Sign in failed:", error);
+      console.error("Signup failed:", error);
       // Optionally show error message
     } finally {
       setIsLoading(false);
@@ -35,9 +36,11 @@ export function SigninForm({
     try {
       setIsLoading(true);
       await signInWithGoogle();
-      // The redirect should be handled by the auth provider
+      // Optionally redirect or show success message
     } catch (error) {
       console.error("Google sign-in failed:", error);
+      // Optionally show error message
+    } finally {
       setIsLoading(false);
     }
   };
@@ -47,15 +50,27 @@ export function SigninForm({
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
-            <h1 className="text-xl font-bold">Sign In</h1>
+            <h1 className="text-xl font-bold">Sign Up</h1>
             <div className="text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a href="/signup" className="underline underline-offset-4">
-                Sign up
+              Already have an account?{" "}
+              <a href="/signin" className="underline underline-offset-4">
+                Sign in
               </a>
             </div>
           </div>
           <div className="flex flex-col gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -81,7 +96,7 @@ export function SigninForm({
               />
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Signing in..." : "Sign In"}
+              {isLoading ? "Signing up..." : "Sign Up"}
             </Button>
           </div>
           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
@@ -103,7 +118,7 @@ export function SigninForm({
               variant="outline" 
               className="w-full" 
               onClick={handleGoogleSignIn}
-              type="button"
+              type="button" 
               disabled={isLoading}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
