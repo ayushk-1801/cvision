@@ -123,19 +123,11 @@ export default function JobsPage() {
             <Filter className="mr-2 h-4 w-4" />
             {showFilters ? 'Hide Filters' : 'Show Filters'}
           </Button>
-          
-          <Link href="/dashboard/jobs/new">
-            <Button size="sm">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Post Job
-            </Button>
-          </Link>
         </div>
       </div>
       
       {/* Search & Filters */}
-      <Card className="mb-8">
-        <CardContent className="pt-6">
+      <div className="mb-8">
           <form onSubmit={handleSearch} className="space-y-4">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
@@ -155,7 +147,7 @@ export default function JobsPage() {
             </div>
             
             {showFilters && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-4">
                 <div>
                   <label className="text-sm font-medium mb-1 block">Location</label>
                   <Input
@@ -230,15 +222,14 @@ export default function JobsPage() {
               </div>
             )}
           </form>
-        </CardContent>
-      </Card>
+      </div>
       
       {/* Results */}
       {isLoading ? (
         <div className="space-y-4">
           {[1, 2, 3].map(i => (
             <Card key={i} className="w-full">
-              <CardContent className="p-6">
+              <CardContent className="">
                 <div className="space-y-3">
                   <Skeleton className="h-8 w-1/3" />
                   <Skeleton className="h-4 w-1/4" />
@@ -281,7 +272,7 @@ export default function JobsPage() {
       ) : (
         <div className="space-y-4">
           {jobs.map(job => (
-            <JobCard key={job.id} job={job} isDashboard={true} />
+            <JobCard key={job.id} job={job} isDashboard={false} />
           ))}
           
           {/* Pagination */}
