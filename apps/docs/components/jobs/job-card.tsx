@@ -58,7 +58,7 @@ const JobCard = ({
       year: "numeric",
     });
   };
-  
+
   const daysUntilDeadline = (dateString: string | null) => {
     if (!dateString) return null;
     const deadline = new Date(dateString);
@@ -72,43 +72,48 @@ const JobCard = ({
   isDashboard = true;
 
   // Set proper routing paths
-  const jobDetailPath = isDashboard 
+  const jobDetailPath = isDashboard
     ? `/dashboard/jobs/${job.id}`
     : `/jobs/${job.id}`;
-    
-  const applyPath = isDashboard 
+
+  const applyPath = isDashboard
     ? `/dashboard/jobs/${job.id}/apply`
     : `/jobs/${job.id}/apply`;
-    
+
   const editPath = `/dashboard/jobs/${job.id}/edit`;
   const applicantsPath = `/dashboard/jobs/${job.id}/applicants`;
 
   return (
-    <Card className={`overflow-hidden ${!job.isActive ? 'border-dashed border-gray-300' : ''}`}>
+    <Card
+      className={`overflow-hidden ${!job.isActive ? "border-dashed border-gray-300" : ""}`}
+    >
       <CardContent className="">
         {!job.isActive && isRecruiter && (
           <div className="mb-3 flex items-center gap-1.5 text-amber-600">
             <AlertTriangle className="h-4 w-4" />
-            <span className="text-xs font-medium">Inactive - Not visible to job seekers</span>
+            <span className="text-xs font-medium">
+              Inactive - Not visible to job seekers
+            </span>
           </div>
         )}
-        
+
         <div className="flex flex-col md:flex-row justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2">
               <h3 className="text-xl font-semibold">
-                <Link
-                  href={jobDetailPath}
-                  className="hover:underline"
-                >
+                <Link href={jobDetailPath} className="hover:underline">
                   {job.title}
                 </Link>
               </h3>
-              
+
               {job.isActive ? (
-                <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Active</Badge>
+                <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                  Active
+                </Badge>
               ) : (
-                <Badge variant="outline" className="text-slate-500">Inactive</Badge>
+                <Badge variant="outline" className="text-slate-500">
+                  Inactive
+                </Badge>
               )}
             </div>
 
@@ -179,27 +184,21 @@ const JobCard = ({
 
             {showActions && (
               <div className="flex gap-2">
-                {isRecruiter ? (
-                  <>
-                    <Link href={applicantsPath}>
-                      <Button size="sm" variant="outline">
-                        <Eye className="h-3.5 w-3.5 mr-1" />
-                        Applicants
-                      </Button>
-                    </Link>
-                    <Link href={editPath}>
-                      <Button size="sm" variant="outline">
-                        <Edit className="h-3.5 w-3.5 mr-1" />
-                        Edit
-                      </Button>
-                    </Link>
-                  </>
-                ) : (
-                  <Link href={applyPath}>
-                    <Button size="sm">Apply Now</Button>
+                <>
+                  <Link href={applicantsPath}>
+                    <Button size="sm" variant="outline">
+                      <Eye className="h-3.5 w-3.5 mr-1" />
+                      Applicants
+                    </Button>
                   </Link>
-                )}
-                
+                  <Link href={editPath}>
+                    <Button size="sm" variant="outline">
+                      <Edit className="h-3.5 w-3.5 mr-1" />
+                      Edit
+                    </Button>
+                  </Link>
+                </>
+
                 <Link href={jobDetailPath}>
                   <Button size="sm" variant="ghost">
                     <ExternalLink className="h-3.5 w-3.5 mr-1" />
@@ -210,20 +209,30 @@ const JobCard = ({
             )}
           </div>
         </div>
-        
-        {job.applicationDeadline && daysUntilDeadline(job.applicationDeadline) !== null && daysUntilDeadline(job.applicationDeadline)! <= 3 && daysUntilDeadline(job.applicationDeadline)! > 0 && !isRecruiter && (
-          <div className="mt-3 text-amber-600 text-sm flex items-center">
-            <AlertTriangle className="h-4 w-4 mr-1.5" />
-            <span>Closing soon - {daysUntilDeadline(job.applicationDeadline)} days left to apply</span>
-          </div>
-        )}
-        
-        {job.applicationDeadline && daysUntilDeadline(job.applicationDeadline) !== null && daysUntilDeadline(job.applicationDeadline)! <= 0 && !isRecruiter && (
-          <div className="mt-3 text-red-600 text-sm flex items-center">
-            <AlertTriangle className="h-4 w-4 mr-1.5" />
-            <span>Application deadline has passed</span>
-          </div>
-        )}
+
+        {job.applicationDeadline &&
+          daysUntilDeadline(job.applicationDeadline) !== null &&
+          daysUntilDeadline(job.applicationDeadline)! <= 3 &&
+          daysUntilDeadline(job.applicationDeadline)! > 0 &&
+          !isRecruiter && (
+            <div className="mt-3 text-amber-600 text-sm flex items-center">
+              <AlertTriangle className="h-4 w-4 mr-1.5" />
+              <span>
+                Closing soon - {daysUntilDeadline(job.applicationDeadline)} days
+                left to apply
+              </span>
+            </div>
+          )}
+
+        {job.applicationDeadline &&
+          daysUntilDeadline(job.applicationDeadline) !== null &&
+          daysUntilDeadline(job.applicationDeadline)! <= 0 &&
+          !isRecruiter && (
+            <div className="mt-3 text-red-600 text-sm flex items-center">
+              <AlertTriangle className="h-4 w-4 mr-1.5" />
+              <span>Application deadline has passed</span>
+            </div>
+          )}
       </CardContent>
     </Card>
   );

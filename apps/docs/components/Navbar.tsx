@@ -3,13 +3,16 @@ import React from "react";
 import { MainNav } from "./main-nav";
 import { UserNav } from "./user-nav";
 import Image from "next/image";
+import { Badge } from "./ui/badge";
 
 function Navbar() {
   return (
     <div className="border-b">
       <div className="flex h-16 items-center md:px-16 px-8">
         <div className="font-semibold">
-            CVision Recruiter
+            CVision
+            <Badge className="ml-2 rounded-full bg-green-700 hover:bg-green-700">Recruiter</Badge>
+            
         </div>
         <MainNav className="mx-6" />
         <div className="ml-auto flex items-center space-x-4">

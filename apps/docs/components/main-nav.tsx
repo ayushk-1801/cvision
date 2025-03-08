@@ -11,18 +11,6 @@ export function MainNav({
       className={cn("flex items-center space-x-4 lg:space-x-6", className)}
       {...props}
     >
-      <Link
-        href="/dashboard/jobs"
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        Jobs
-      </Link>
-      <Link
-        href="/dashboard/applications"
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        Applications
-      </Link>
     </nav>
   )
 }
