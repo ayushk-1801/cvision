@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,11 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchJobs } from "@/lib/api-helpers";
 import JobCard from "@/components/jobs/job-card";
-import { 
-  Search, 
-  Filter,
-  PlusCircle,
-} from "lucide-react";
+import { Search, Filter } from "lucide-react";
 
 interface Job {
   id: string;
@@ -45,7 +40,7 @@ interface JobsResponse {
   pagination: Pagination;
 }
 
-export default function JobsPage() {
+export default function PublicJobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -108,29 +103,12 @@ export default function JobsPage() {
 
   return (
     <div className="container py-10 mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Job Listings</h1>
-          <p className="text-slate-500">Browse and manage job opportunities</p>
-        </div>
-        
-        <div className="mt-4 md:mt-0 flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter className="mr-2 h-4 w-4" />
-            {showFilters ? 'Hide Filters' : 'Show Filters'}
-          </Button>
-          
-          <Link href="/dashboard/jobs/new">
-            <Button size="sm">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Post Job
-            </Button>
-          </Link>
-        </div>
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold mb-2">Find Your Dream Job</h1>
+        <p className="text-slate-500 max-w-2xl mx-auto">
+          Browse through hundreds of job listings from top companies in various industries.
+          Find the perfect role that matches your skills and career goals.
+        </p>
       </div>
       
       {/* Search & Filters */}
@@ -152,6 +130,15 @@ export default function JobsPage() {
               
               <Button type="submit">Search</Button>
               <Button type="button" variant="outline" onClick={handleReset}>Reset</Button>
+              
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                <Filter className="mr-2 h-4 w-4" />
+                {showFilters ? 'Hide Filters' : 'Filters'}
+              </Button>
             </div>
             
             {showFilters && (
@@ -194,22 +181,6 @@ export default function JobsPage() {
                       <SelectItem value="Part-time">Part-time</SelectItem>
                       <SelectItem value="Contract">Contract</SelectItem>
                       <SelectItem value="Internship">Internship</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium mb-1 block">Experience Level</label>
-                  <Select value={experienceLevel} onValueChange={setExperienceLevel}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Any experience" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">Any experience</SelectItem>
-                      <SelectItem value="Entry-level">Entry-level</SelectItem>
-                      <SelectItem value="Mid-level">Mid-level</SelectItem>
-                      <SelectItem value="Senior">Senior</SelectItem>
-                      <SelectItem value="Executive">Executive</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -266,22 +237,20 @@ export default function JobsPage() {
           <CardContent className="p-10">
             <div className="text-center">
               <h3 className="text-lg font-medium">No jobs found</h3>
-              <p className="text-slate-500 mt-2">Try adjusting your search filters or create a new job posting</p>
-              <div className="mt-6">
-                <Link href="/dashboard/jobs/new">
-                  <Button>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Post New Job
-                  </Button>
-                </Link>
-              </div>
+              <p className="text-slate-500 mt-2">Try adjusting your search filters or check back later</p>
             </div>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-4">
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-sm text-slate-500">
+              Showing {jobs.length} of {pagination?.totalCount || 0} jobs
+            </p>
+          </div>
+          
           {jobs.map(job => (
-            <JobCard key={job.id} job={job} isDashboard={true} />
+            <JobCard key={job.id} job={job} isDashboard={false} />
           ))}
           
           {/* Pagination */}

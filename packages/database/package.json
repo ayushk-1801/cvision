@@ -18,7 +18,8 @@
     "studio": "prisma studio"
   },
   "dependencies": {
-    "@prisma/client": "latest"
+    "@prisma/client": "latest",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

@@ -12,7 +12,7 @@ generator client {
 }
 
 model User {
-  id            String    @id
+  id            String        @id
   name          String
   email         String
   emailVerified Boolean
@@ -21,6 +21,8 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  jobs          Job[] // Jobs posted by recruiters
+  applications  Application[] // Applications submitted by job seekers
 
   @@unique([email])
   @@map("user")
@@ -69,4 +71,51 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Job {
+  id             String        @id @default(uuid())
+  title          String
+  company        String
+  location       String
+  description    String
+  requirements   String
+  salary         String?
+  contactEmail   String
+  applicationUrl String?
+  isRemote       Boolean       @default(false)
+  isActive       Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  expiresAt      DateTime?
+  recruiterId    String
+  recruiter      User          @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  applications   Application[]
+  topApplicants  Json?
+
+  industry        String?
+  jobType         String? // Full-time, Part-time, Contract, etc.
+  experienceLevel String? // Entry-level, Mid-level, Senior, etc.
+
+  @@map("job")
+}
+
+model Application {
+  id          String   @id @default(uuid())
+  status      String   @default("pending") // pending, reviewing, rejected, accepted
+  coverLetter String?
+  resumeUrl   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  jobId       String
+  job         Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  applicantId String
+  applicant   User   @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  notes         String? // Recruiter's notes about the application
+  interviewDate DateTime?
+
+  @@unique([jobId, applicantId]) // Prevent duplicate applications
+  @@map("application")
 }

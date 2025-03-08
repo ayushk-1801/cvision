@@ -13,7 +13,7 @@ export function MainNav({
     >
       <Link
         href="/dashboard/"
-        className="text-sm font-medium transition-colors hover:text-primary"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         Home
       </Link>
@@ -24,16 +24,10 @@ export function MainNav({
         Jobs
       </Link>
       <Link
-        href="/examples/dashboard"
+        href="/dashboard/applications"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >
-        Products
-      </Link>
-      <Link
-        href="/examples/dashboard"
-        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
-        Settings
+        Applications
       </Link>
     </nav>
   )
