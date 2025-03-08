@@ -1,5 +1,10 @@
 import "./globals.css";
 
+export const metadata = {
+  title: 'CVision',
+  description: 'Computer Vision Platform',
+};
+
 export default function RootLayout({
   children,
 }: {

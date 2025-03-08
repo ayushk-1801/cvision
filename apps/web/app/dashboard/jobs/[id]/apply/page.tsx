@@ -240,25 +240,7 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
                     </FormItem>
                   )}
                 />
-                
-                <FormField
-                  control={form.control}
-                  name="coverLetter"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Cover Letter (Optional)</FormLabel>
-                      <FormControl>
-                        <Textarea 
-                          placeholder="Tell us why you're a great fit for this role..."
-                          className="min-h-32 resize-y"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
+                                
                 <Separator />
                 
                 <div className="space-y-4">
@@ -295,7 +277,7 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
               </div>
             </CardContent>
             
-            <CardFooter className="flex justify-between">
+            <CardFooter className="flex justify-between mt-4">
               <Button variant="outline" type="button" onClick={() => router.back()}>
                 Cancel
               </Button>

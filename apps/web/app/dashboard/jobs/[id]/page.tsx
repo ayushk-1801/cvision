@@ -168,7 +168,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="">
               <h1 className="text-2xl font-bold mb-3">{job.title}</h1>
               
               <div className="flex flex-wrap items-center gap-4 text-slate-500">
@@ -264,7 +264,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
         
         <div className="space-y-6">
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="">
               <h3 className="text-lg font-semibold mb-4">Apply for this position</h3>
               <p className="text-slate-500 mb-6">
                 Submit your application now and hear back from the hiring team.
@@ -280,7 +280,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
               <CardTitle>About the recruiter</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3">
                 <Avatar>
                   {job.recruiter.image ? (
                     <AvatarImage src={job.recruiter.image} alt={job.recruiter.name} />
