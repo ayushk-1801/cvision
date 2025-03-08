@@ -137,7 +137,7 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
         </Button>
         
         <Card className="bg-red-50 border-red-200">
-          <CardContent className="pt-6 text-center">
+          <CardContent className="text-center">
             <h3 className="text-lg font-medium text-red-700 mb-2">{error}</h3>
             <p className="text-red-600 mb-6">
               We couldn't find the application you're looking for.
@@ -334,7 +334,7 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
           </Card>
           
           <Card className="bg-muted/50">
-            <CardContent className="pt-6">
+            <CardContent className="">
               <h3 className="font-medium mb-2">Next Steps</h3>
               {application.status === 'pending' && (
                 <p className="text-sm text-muted-foreground">

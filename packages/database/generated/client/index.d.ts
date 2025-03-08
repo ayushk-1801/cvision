@@ -5924,6 +5924,7 @@ export namespace Prisma {
     updatedAt: number
     expiresAt: number
     recruiterId: number
+    applicants: number
     topApplicants: number
     industry: number
     jobType: number
@@ -5990,6 +5991,7 @@ export namespace Prisma {
     updatedAt?: true
     expiresAt?: true
     recruiterId?: true
+    applicants?: true
     topApplicants?: true
     industry?: true
     jobType?: true
@@ -6085,7 +6087,8 @@ export namespace Prisma {
     updatedAt: Date
     expiresAt: Date | null
     recruiterId: string
-    topApplicants: JsonValue | null
+    applicants: JsonValue | null
+    topApplicants: string[]
     industry: string | null
     jobType: string | null
     experienceLevel: string | null
@@ -6124,6 +6127,7 @@ export namespace Prisma {
     updatedAt?: boolean
     expiresAt?: boolean
     recruiterId?: boolean
+    applicants?: boolean
     topApplicants?: boolean
     industry?: boolean
     jobType?: boolean
@@ -6149,6 +6153,7 @@ export namespace Prisma {
     updatedAt?: boolean
     expiresAt?: boolean
     recruiterId?: boolean
+    applicants?: boolean
     topApplicants?: boolean
     industry?: boolean
     jobType?: boolean
@@ -6172,6 +6177,7 @@ export namespace Prisma {
     updatedAt?: boolean
     expiresAt?: boolean
     recruiterId?: boolean
+    applicants?: boolean
     topApplicants?: boolean
     industry?: boolean
     jobType?: boolean
@@ -6195,13 +6201,14 @@ export namespace Prisma {
     updatedAt?: boolean
     expiresAt?: boolean
     recruiterId?: boolean
+    applicants?: boolean
     topApplicants?: boolean
     industry?: boolean
     jobType?: boolean
     experienceLevel?: boolean
   }
 
-  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "company" | "location" | "description" | "requirements" | "salary" | "contactEmail" | "applicationUrl" | "isRemote" | "isActive" | "createdAt" | "updatedAt" | "expiresAt" | "recruiterId" | "topApplicants" | "industry" | "jobType" | "experienceLevel", ExtArgs["result"]["job"]>
+  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "company" | "location" | "description" | "requirements" | "salary" | "contactEmail" | "applicationUrl" | "isRemote" | "isActive" | "createdAt" | "updatedAt" | "expiresAt" | "recruiterId" | "applicants" | "topApplicants" | "industry" | "jobType" | "experienceLevel", ExtArgs["result"]["job"]>
   export type JobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     recruiter?: boolean | UserDefaultArgs<ExtArgs>
     applications?: boolean | Job$applicationsArgs<ExtArgs>
@@ -6236,7 +6243,8 @@ export namespace Prisma {
       updatedAt: Date
       expiresAt: Date | null
       recruiterId: string
-      topApplicants: Prisma.JsonValue | null
+      applicants: Prisma.JsonValue | null
+      topApplicants: string[]
       industry: string | null
       jobType: string | null
       experienceLevel: string | null
@@ -6680,7 +6688,8 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"Job", 'DateTime'>
     readonly expiresAt: FieldRef<"Job", 'DateTime'>
     readonly recruiterId: FieldRef<"Job", 'String'>
-    readonly topApplicants: FieldRef<"Job", 'Json'>
+    readonly applicants: FieldRef<"Job", 'Json'>
+    readonly topApplicants: FieldRef<"Job", 'String[]'>
     readonly industry: FieldRef<"Job", 'String'>
     readonly jobType: FieldRef<"Job", 'String'>
     readonly experienceLevel: FieldRef<"Job", 'String'>
@@ -8341,6 +8350,7 @@ export namespace Prisma {
     updatedAt: 'updatedAt',
     expiresAt: 'expiresAt',
     recruiterId: 'recruiterId',
+    applicants: 'applicants',
     topApplicants: 'topApplicants',
     industry: 'industry',
     jobType: 'jobType',
@@ -8793,7 +8803,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Job"> | Date | string
     expiresAt?: DateTimeNullableFilter<"Job"> | Date | string | null
     recruiterId?: StringFilter<"Job"> | string
-    topApplicants?: JsonNullableFilter<"Job">
+    applicants?: JsonNullableFilter<"Job">
+    topApplicants?: StringNullableListFilter<"Job">
     industry?: StringNullableFilter<"Job"> | string | null
     jobType?: StringNullableFilter<"Job"> | string | null
     experienceLevel?: StringNullableFilter<"Job"> | string | null
@@ -8817,7 +8828,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     expiresAt?: SortOrderInput | SortOrder
     recruiterId?: SortOrder
-    topApplicants?: SortOrderInput | SortOrder
+    applicants?: SortOrderInput | SortOrder
+    topApplicants?: SortOrder
     industry?: SortOrderInput | SortOrder
     jobType?: SortOrderInput | SortOrder
     experienceLevel?: SortOrderInput | SortOrder
@@ -8844,7 +8856,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Job"> | Date | string
     expiresAt?: DateTimeNullableFilter<"Job"> | Date | string | null
     recruiterId?: StringFilter<"Job"> | string
-    topApplicants?: JsonNullableFilter<"Job">
+    applicants?: JsonNullableFilter<"Job">
+    topApplicants?: StringNullableListFilter<"Job">
     industry?: StringNullableFilter<"Job"> | string | null
     jobType?: StringNullableFilter<"Job"> | string | null
     experienceLevel?: StringNullableFilter<"Job"> | string | null
@@ -8868,7 +8881,8 @@ export namespace Prisma {
     updatedAt?: SortOrder
     expiresAt?: SortOrderInput | SortOrder
     recruiterId?: SortOrder
-    topApplicants?: SortOrderInput | SortOrder
+    applicants?: SortOrderInput | SortOrder
+    topApplicants?: SortOrder
     industry?: SortOrderInput | SortOrder
     jobType?: SortOrderInput | SortOrder
     experienceLevel?: SortOrderInput | SortOrder
@@ -8896,7 +8910,8 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Job"> | Date | string
     expiresAt?: DateTimeNullableWithAggregatesFilter<"Job"> | Date | string | null
     recruiterId?: StringWithAggregatesFilter<"Job"> | string
-    topApplicants?: JsonNullableWithAggregatesFilter<"Job">
+    applicants?: JsonNullableWithAggregatesFilter<"Job">
+    topApplicants?: StringNullableListFilter<"Job">
     industry?: StringNullableWithAggregatesFilter<"Job"> | string | null
     jobType?: StringNullableWithAggregatesFilter<"Job"> | string | null
     experienceLevel?: StringNullableWithAggregatesFilter<"Job"> | string | null
@@ -9337,7 +9352,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     expiresAt?: Date | string | null
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobCreatetopApplicantsInput | string[]
     industry?: string | null
     jobType?: string | null
     experienceLevel?: string | null
@@ -9361,7 +9377,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     expiresAt?: Date | string | null
     recruiterId: string
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobCreatetopApplicantsInput | string[]
     industry?: string | null
     jobType?: string | null
     experienceLevel?: string | null
@@ -9383,7 +9400,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobUpdatetopApplicantsInput | string[]
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     jobType?: NullableStringFieldUpdateOperationsInput | string | null
     experienceLevel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9407,7 +9425,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recruiterId?: StringFieldUpdateOperationsInput | string
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobUpdatetopApplicantsInput | string[]
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     jobType?: NullableStringFieldUpdateOperationsInput | string | null
     experienceLevel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9430,7 +9449,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     expiresAt?: Date | string | null
     recruiterId: string
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobCreatetopApplicantsInput | string[]
     industry?: string | null
     jobType?: string | null
     experienceLevel?: string | null
@@ -9451,7 +9471,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobUpdatetopApplicantsInput | string[]
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     jobType?: NullableStringFieldUpdateOperationsInput | string | null
     experienceLevel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9473,7 +9494,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recruiterId?: StringFieldUpdateOperationsInput | string
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobUpdatetopApplicantsInput | string[]
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     jobType?: NullableStringFieldUpdateOperationsInput | string | null
     experienceLevel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9908,6 +9930,14 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type JobCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -9924,6 +9954,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     expiresAt?: SortOrder
     recruiterId?: SortOrder
+    applicants?: SortOrder
     topApplicants?: SortOrder
     industry?: SortOrder
     jobType?: SortOrder
@@ -10263,6 +10294,10 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountsInput, UserUpdateWithoutAccountsInput>, UserUncheckedUpdateWithoutAccountsInput>
   }
 
+  export type JobCreatetopApplicantsInput = {
+    set: string[]
+  }
+
   export type UserCreateNestedOneWithoutJobsInput = {
     create?: XOR<UserCreateWithoutJobsInput, UserUncheckedCreateWithoutJobsInput>
     connectOrCreate?: UserCreateOrConnectWithoutJobsInput
@@ -10281,6 +10316,11 @@ export namespace Prisma {
     connectOrCreate?: ApplicationCreateOrConnectWithoutJobInput | ApplicationCreateOrConnectWithoutJobInput[]
     createMany?: ApplicationCreateManyJobInputEnvelope
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
+  }
+
+  export type JobUpdatetopApplicantsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type UserUpdateOneRequiredWithoutJobsNestedInput = {
@@ -10602,7 +10642,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     expiresAt?: Date | string | null
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobCreatetopApplicantsInput | string[]
     industry?: string | null
     jobType?: string | null
     experienceLevel?: string | null
@@ -10624,7 +10665,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     expiresAt?: Date | string | null
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobCreatetopApplicantsInput | string[]
     industry?: string | null
     jobType?: string | null
     experienceLevel?: string | null
@@ -10775,7 +10817,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Job"> | Date | string
     expiresAt?: DateTimeNullableFilter<"Job"> | Date | string | null
     recruiterId?: StringFilter<"Job"> | string
-    topApplicants?: JsonNullableFilter<"Job">
+    applicants?: JsonNullableFilter<"Job">
+    topApplicants?: StringNullableListFilter<"Job">
     industry?: StringNullableFilter<"Job"> | string | null
     jobType?: StringNullableFilter<"Job"> | string | null
     experienceLevel?: StringNullableFilter<"Job"> | string | null
@@ -11082,7 +11125,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     expiresAt?: Date | string | null
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobCreatetopApplicantsInput | string[]
     industry?: string | null
     jobType?: string | null
     experienceLevel?: string | null
@@ -11105,7 +11149,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     expiresAt?: Date | string | null
     recruiterId: string
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobCreatetopApplicantsInput | string[]
     industry?: string | null
     jobType?: string | null
     experienceLevel?: string | null
@@ -11173,7 +11218,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobUpdatetopApplicantsInput | string[]
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     jobType?: NullableStringFieldUpdateOperationsInput | string | null
     experienceLevel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11196,7 +11242,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     recruiterId?: StringFieldUpdateOperationsInput | string
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobUpdatetopApplicantsInput | string[]
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     jobType?: NullableStringFieldUpdateOperationsInput | string | null
     experienceLevel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11279,7 +11326,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     expiresAt?: Date | string | null
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobCreatetopApplicantsInput | string[]
     industry?: string | null
     jobType?: string | null
     experienceLevel?: string | null
@@ -11387,7 +11435,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobUpdatetopApplicantsInput | string[]
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     jobType?: NullableStringFieldUpdateOperationsInput | string | null
     experienceLevel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11409,7 +11458,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobUpdatetopApplicantsInput | string[]
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     jobType?: NullableStringFieldUpdateOperationsInput | string | null
     experienceLevel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -11431,7 +11481,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    topApplicants?: NullableJsonNullValueInput | InputJsonValue
+    applicants?: NullableJsonNullValueInput | InputJsonValue
+    topApplicants?: JobUpdatetopApplicantsInput | string[]
     industry?: NullableStringFieldUpdateOperationsInput | string | null
     jobType?: NullableStringFieldUpdateOperationsInput | string | null
     experienceLevel?: NullableStringFieldUpdateOperationsInput | string | null

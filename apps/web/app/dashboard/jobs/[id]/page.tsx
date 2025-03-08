@@ -96,7 +96,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <Card>
-              <CardContent className="p-6">
+              <CardContent className="">
                 <Skeleton className="h-8 w-3/4 mb-3" />
                 <div className="flex flex-wrap gap-4 mb-4">
                   <Skeleton className="h-4 w-1/4" />
@@ -124,7 +124,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
           
           <div>
             <Card>
-              <CardContent className="p-6">
+              <CardContent className="">
                 <Skeleton className="h-6 w-40 mb-4" />
                 <Skeleton className="h-20 w-full mb-4" />
                 <Skeleton className="h-10 w-full" />

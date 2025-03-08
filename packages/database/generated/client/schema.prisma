@@ -91,7 +91,8 @@ model Job {
   recruiterId    String
   recruiter      User          @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
   applications   Application[]
-  topApplicants  Json?
+  applicants     Json?
+  topApplicants  String[]
 
   industry        String?
   jobType         String? // Full-time, Part-time, Contract, etc.
