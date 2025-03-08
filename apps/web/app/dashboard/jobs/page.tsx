@@ -257,15 +257,7 @@ export default function JobsPage() {
           <CardContent className="p-10">
             <div className="text-center">
               <h3 className="text-lg font-medium">No jobs found</h3>
-              <p className="text-slate-500 mt-2">Try adjusting your search filters or create a new job posting</p>
-              <div className="mt-6">
-                <Link href="/dashboard/jobs/new">
-                  <Button>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Post New Job
-                  </Button>
-                </Link>
-              </div>
+              <p className="text-slate-500 mt-2">Try adjusting your search filters</p>
             </div>
           </CardContent>
         </Card>

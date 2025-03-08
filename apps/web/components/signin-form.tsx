@@ -22,7 +22,7 @@ export function SigninForm({
     try {
       setIsLoading(true);
       await signIn(email, password);
-      window.location.href = '/'; // Redirect to home page after successful sign in
+      window.location.href = '/dashboard'; // Redirect to home page after successful sign in
     } catch (error) {
       console.error("Sign in failed:", error);
       // Optionally show error message

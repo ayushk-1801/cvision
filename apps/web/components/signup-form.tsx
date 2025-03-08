@@ -23,7 +23,7 @@ export function SignupForm({
     try {
       setIsLoading(true);
       await signUp(email, password, name);
-      // Optionally redirect or show success message
+      window.location.href = '/dashboard'; // Redirect to home page after successful
     } catch (error) {
       console.error("Signup failed:", error);
       // Optionally show error message
