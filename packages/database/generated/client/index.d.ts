@@ -5862,8 +5862,22 @@ export namespace Prisma {
 
   export type AggregateJob = {
     _count: JobCountAggregateOutputType | null
+    _avg: JobAvgAggregateOutputType | null
+    _sum: JobSumAggregateOutputType | null
     _min: JobMinAggregateOutputType | null
     _max: JobMaxAggregateOutputType | null
+  }
+
+  export type JobAvgAggregateOutputType = {
+    yearsOfExperience: number | null
+    numberOfRoles: number | null
+    shortlistSize: number | null
+  }
+
+  export type JobSumAggregateOutputType = {
+    yearsOfExperience: number | null
+    numberOfRoles: number | null
+    shortlistSize: number | null
   }
 
   export type JobMinAggregateOutputType = {
@@ -5875,6 +5889,9 @@ export namespace Prisma {
     requirements: string | null
     salary: string | null
     contactEmail: string | null
+    yearsOfExperience: number | null
+    numberOfRoles: number | null
+    shortlistSize: number | null
     applicationUrl: string | null
     isRemote: boolean | null
     applicationDeadline: Date | null
@@ -5897,6 +5914,9 @@ export namespace Prisma {
     requirements: string | null
     salary: string | null
     contactEmail: string | null
+    yearsOfExperience: number | null
+    numberOfRoles: number | null
+    shortlistSize: number | null
     applicationUrl: string | null
     isRemote: boolean | null
     applicationDeadline: Date | null
@@ -5919,6 +5939,9 @@ export namespace Prisma {
     requirements: number
     salary: number
     contactEmail: number
+    yearsOfExperience: number
+    numberOfRoles: number
+    shortlistSize: number
     applicationUrl: number
     isRemote: number
     applicationDeadline: number
@@ -5936,6 +5959,18 @@ export namespace Prisma {
   }
 
 
+  export type JobAvgAggregateInputType = {
+    yearsOfExperience?: true
+    numberOfRoles?: true
+    shortlistSize?: true
+  }
+
+  export type JobSumAggregateInputType = {
+    yearsOfExperience?: true
+    numberOfRoles?: true
+    shortlistSize?: true
+  }
+
   export type JobMinAggregateInputType = {
     id?: true
     title?: true
@@ -5945,6 +5980,9 @@ export namespace Prisma {
     requirements?: true
     salary?: true
     contactEmail?: true
+    yearsOfExperience?: true
+    numberOfRoles?: true
+    shortlistSize?: true
     applicationUrl?: true
     isRemote?: true
     applicationDeadline?: true
@@ -5967,6 +6005,9 @@ export namespace Prisma {
     requirements?: true
     salary?: true
     contactEmail?: true
+    yearsOfExperience?: true
+    numberOfRoles?: true
+    shortlistSize?: true
     applicationUrl?: true
     isRemote?: true
     applicationDeadline?: true
@@ -5989,6 +6030,9 @@ export namespace Prisma {
     requirements?: true
     salary?: true
     contactEmail?: true
+    yearsOfExperience?: true
+    numberOfRoles?: true
+    shortlistSize?: true
     applicationUrl?: true
     isRemote?: true
     applicationDeadline?: true
@@ -6043,6 +6087,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: JobAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: JobSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: JobMinAggregateInputType
@@ -6073,6 +6129,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: JobCountAggregateInputType | true
+    _avg?: JobAvgAggregateInputType
+    _sum?: JobSumAggregateInputType
     _min?: JobMinAggregateInputType
     _max?: JobMaxAggregateInputType
   }
@@ -6086,6 +6144,9 @@ export namespace Prisma {
     requirements: string
     salary: string | null
     contactEmail: string
+    yearsOfExperience: number
+    numberOfRoles: number
+    shortlistSize: number
     applicationUrl: string | null
     isRemote: boolean
     applicationDeadline: Date | null
@@ -6100,6 +6161,8 @@ export namespace Prisma {
     jobType: string | null
     experienceLevel: string | null
     _count: JobCountAggregateOutputType | null
+    _avg: JobAvgAggregateOutputType | null
+    _sum: JobSumAggregateOutputType | null
     _min: JobMinAggregateOutputType | null
     _max: JobMaxAggregateOutputType | null
   }
@@ -6127,6 +6190,9 @@ export namespace Prisma {
     requirements?: boolean
     salary?: boolean
     contactEmail?: boolean
+    yearsOfExperience?: boolean
+    numberOfRoles?: boolean
+    shortlistSize?: boolean
     applicationUrl?: boolean
     isRemote?: boolean
     applicationDeadline?: boolean
@@ -6154,6 +6220,9 @@ export namespace Prisma {
     requirements?: boolean
     salary?: boolean
     contactEmail?: boolean
+    yearsOfExperience?: boolean
+    numberOfRoles?: boolean
+    shortlistSize?: boolean
     applicationUrl?: boolean
     isRemote?: boolean
     applicationDeadline?: boolean
@@ -6179,6 +6248,9 @@ export namespace Prisma {
     requirements?: boolean
     salary?: boolean
     contactEmail?: boolean
+    yearsOfExperience?: boolean
+    numberOfRoles?: boolean
+    shortlistSize?: boolean
     applicationUrl?: boolean
     isRemote?: boolean
     applicationDeadline?: boolean
@@ -6204,6 +6276,9 @@ export namespace Prisma {
     requirements?: boolean
     salary?: boolean
     contactEmail?: boolean
+    yearsOfExperience?: boolean
+    numberOfRoles?: boolean
+    shortlistSize?: boolean
     applicationUrl?: boolean
     isRemote?: boolean
     applicationDeadline?: boolean
@@ -6219,7 +6294,7 @@ export namespace Prisma {
     experienceLevel?: boolean
   }
 
-  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "company" | "location" | "description" | "requirements" | "salary" | "contactEmail" | "applicationUrl" | "isRemote" | "applicationDeadline" | "isActive" | "createdAt" | "updatedAt" | "expiresAt" | "recruiterId" | "applicants" | "topApplicants" | "industry" | "jobType" | "experienceLevel", ExtArgs["result"]["job"]>
+  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "company" | "location" | "description" | "requirements" | "salary" | "contactEmail" | "yearsOfExperience" | "numberOfRoles" | "shortlistSize" | "applicationUrl" | "isRemote" | "applicationDeadline" | "isActive" | "createdAt" | "updatedAt" | "expiresAt" | "recruiterId" | "applicants" | "topApplicants" | "industry" | "jobType" | "experienceLevel", ExtArgs["result"]["job"]>
   export type JobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     recruiter?: boolean | UserDefaultArgs<ExtArgs>
     applications?: boolean | Job$applicationsArgs<ExtArgs>
@@ -6247,6 +6322,9 @@ export namespace Prisma {
       requirements: string
       salary: string | null
       contactEmail: string
+      yearsOfExperience: number
+      numberOfRoles: number
+      shortlistSize: number
       applicationUrl: string | null
       isRemote: boolean
       applicationDeadline: Date | null
@@ -6693,6 +6771,9 @@ export namespace Prisma {
     readonly requirements: FieldRef<"Job", 'String'>
     readonly salary: FieldRef<"Job", 'String'>
     readonly contactEmail: FieldRef<"Job", 'String'>
+    readonly yearsOfExperience: FieldRef<"Job", 'Int'>
+    readonly numberOfRoles: FieldRef<"Job", 'Int'>
+    readonly shortlistSize: FieldRef<"Job", 'Int'>
     readonly applicationUrl: FieldRef<"Job", 'String'>
     readonly isRemote: FieldRef<"Job", 'Boolean'>
     readonly applicationDeadline: FieldRef<"Job", 'DateTime'>
@@ -8356,6 +8437,9 @@ export namespace Prisma {
     requirements: 'requirements',
     salary: 'salary',
     contactEmail: 'contactEmail',
+    yearsOfExperience: 'yearsOfExperience',
+    numberOfRoles: 'numberOfRoles',
+    shortlistSize: 'shortlistSize',
     applicationUrl: 'applicationUrl',
     isRemote: 'isRemote',
     applicationDeadline: 'applicationDeadline',
@@ -8472,6 +8556,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -8486,16 +8584,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
+   * Reference to a field of type 'Float'
    */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
   /**
-   * Reference to a field of type 'Int[]'
+   * Reference to a field of type 'Float[]'
    */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -8810,6 +8908,9 @@ export namespace Prisma {
     requirements?: StringFilter<"Job"> | string
     salary?: StringNullableFilter<"Job"> | string | null
     contactEmail?: StringFilter<"Job"> | string
+    yearsOfExperience?: IntFilter<"Job"> | number
+    numberOfRoles?: IntFilter<"Job"> | number
+    shortlistSize?: IntFilter<"Job"> | number
     applicationUrl?: StringNullableFilter<"Job"> | string | null
     isRemote?: BoolFilter<"Job"> | boolean
     applicationDeadline?: DateTimeNullableFilter<"Job"> | Date | string | null
@@ -8836,6 +8937,9 @@ export namespace Prisma {
     requirements?: SortOrder
     salary?: SortOrderInput | SortOrder
     contactEmail?: SortOrder
+    yearsOfExperience?: SortOrder
+    numberOfRoles?: SortOrder
+    shortlistSize?: SortOrder
     applicationUrl?: SortOrderInput | SortOrder
     isRemote?: SortOrder
     applicationDeadline?: SortOrderInput | SortOrder
@@ -8865,6 +8969,9 @@ export namespace Prisma {
     requirements?: StringFilter<"Job"> | string
     salary?: StringNullableFilter<"Job"> | string | null
     contactEmail?: StringFilter<"Job"> | string
+    yearsOfExperience?: IntFilter<"Job"> | number
+    numberOfRoles?: IntFilter<"Job"> | number
+    shortlistSize?: IntFilter<"Job"> | number
     applicationUrl?: StringNullableFilter<"Job"> | string | null
     isRemote?: BoolFilter<"Job"> | boolean
     applicationDeadline?: DateTimeNullableFilter<"Job"> | Date | string | null
@@ -8891,6 +8998,9 @@ export namespace Prisma {
     requirements?: SortOrder
     salary?: SortOrderInput | SortOrder
     contactEmail?: SortOrder
+    yearsOfExperience?: SortOrder
+    numberOfRoles?: SortOrder
+    shortlistSize?: SortOrder
     applicationUrl?: SortOrderInput | SortOrder
     isRemote?: SortOrder
     applicationDeadline?: SortOrderInput | SortOrder
@@ -8905,8 +9015,10 @@ export namespace Prisma {
     jobType?: SortOrderInput | SortOrder
     experienceLevel?: SortOrderInput | SortOrder
     _count?: JobCountOrderByAggregateInput
+    _avg?: JobAvgOrderByAggregateInput
     _max?: JobMaxOrderByAggregateInput
     _min?: JobMinOrderByAggregateInput
+    _sum?: JobSumOrderByAggregateInput
   }
 
   export type JobScalarWhereWithAggregatesInput = {
@@ -8921,6 +9033,9 @@ export namespace Prisma {
     requirements?: StringWithAggregatesFilter<"Job"> | string
     salary?: StringNullableWithAggregatesFilter<"Job"> | string | null
     contactEmail?: StringWithAggregatesFilter<"Job"> | string
+    yearsOfExperience?: IntWithAggregatesFilter<"Job"> | number
+    numberOfRoles?: IntWithAggregatesFilter<"Job"> | number
+    shortlistSize?: IntWithAggregatesFilter<"Job"> | number
     applicationUrl?: StringNullableWithAggregatesFilter<"Job"> | string | null
     isRemote?: BoolWithAggregatesFilter<"Job"> | boolean
     applicationDeadline?: DateTimeNullableWithAggregatesFilter<"Job"> | Date | string | null
@@ -9365,6 +9480,9 @@ export namespace Prisma {
     requirements: string
     salary?: string | null
     contactEmail: string
+    yearsOfExperience?: number
+    numberOfRoles?: number
+    shortlistSize?: number
     applicationUrl?: string | null
     isRemote?: boolean
     applicationDeadline?: Date | string | null
@@ -9390,6 +9508,9 @@ export namespace Prisma {
     requirements: string
     salary?: string | null
     contactEmail: string
+    yearsOfExperience?: number
+    numberOfRoles?: number
+    shortlistSize?: number
     applicationUrl?: string | null
     isRemote?: boolean
     applicationDeadline?: Date | string | null
@@ -9415,6 +9536,9 @@ export namespace Prisma {
     requirements?: StringFieldUpdateOperationsInput | string
     salary?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
+    yearsOfExperience?: IntFieldUpdateOperationsInput | number
+    numberOfRoles?: IntFieldUpdateOperationsInput | number
+    shortlistSize?: IntFieldUpdateOperationsInput | number
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
     applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9440,6 +9564,9 @@ export namespace Prisma {
     requirements?: StringFieldUpdateOperationsInput | string
     salary?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
+    yearsOfExperience?: IntFieldUpdateOperationsInput | number
+    numberOfRoles?: IntFieldUpdateOperationsInput | number
+    shortlistSize?: IntFieldUpdateOperationsInput | number
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
     applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9465,6 +9592,9 @@ export namespace Prisma {
     requirements: string
     salary?: string | null
     contactEmail: string
+    yearsOfExperience?: number
+    numberOfRoles?: number
+    shortlistSize?: number
     applicationUrl?: string | null
     isRemote?: boolean
     applicationDeadline?: Date | string | null
@@ -9489,6 +9619,9 @@ export namespace Prisma {
     requirements?: StringFieldUpdateOperationsInput | string
     salary?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
+    yearsOfExperience?: IntFieldUpdateOperationsInput | number
+    numberOfRoles?: IntFieldUpdateOperationsInput | number
+    shortlistSize?: IntFieldUpdateOperationsInput | number
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
     applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9512,6 +9645,9 @@ export namespace Prisma {
     requirements?: StringFieldUpdateOperationsInput | string
     salary?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
+    yearsOfExperience?: IntFieldUpdateOperationsInput | number
+    numberOfRoles?: IntFieldUpdateOperationsInput | number
+    shortlistSize?: IntFieldUpdateOperationsInput | number
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
     applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -9932,6 +10068,17 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
   export type JsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
         Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -9973,6 +10120,9 @@ export namespace Prisma {
     requirements?: SortOrder
     salary?: SortOrder
     contactEmail?: SortOrder
+    yearsOfExperience?: SortOrder
+    numberOfRoles?: SortOrder
+    shortlistSize?: SortOrder
     applicationUrl?: SortOrder
     isRemote?: SortOrder
     applicationDeadline?: SortOrder
@@ -9988,6 +10138,12 @@ export namespace Prisma {
     experienceLevel?: SortOrder
   }
 
+  export type JobAvgOrderByAggregateInput = {
+    yearsOfExperience?: SortOrder
+    numberOfRoles?: SortOrder
+    shortlistSize?: SortOrder
+  }
+
   export type JobMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -9997,6 +10153,9 @@ export namespace Prisma {
     requirements?: SortOrder
     salary?: SortOrder
     contactEmail?: SortOrder
+    yearsOfExperience?: SortOrder
+    numberOfRoles?: SortOrder
+    shortlistSize?: SortOrder
     applicationUrl?: SortOrder
     isRemote?: SortOrder
     applicationDeadline?: SortOrder
@@ -10019,6 +10178,9 @@ export namespace Prisma {
     requirements?: SortOrder
     salary?: SortOrder
     contactEmail?: SortOrder
+    yearsOfExperience?: SortOrder
+    numberOfRoles?: SortOrder
+    shortlistSize?: SortOrder
     applicationUrl?: SortOrder
     isRemote?: SortOrder
     applicationDeadline?: SortOrder
@@ -10030,6 +10192,28 @@ export namespace Prisma {
     industry?: SortOrder
     jobType?: SortOrder
     experienceLevel?: SortOrder
+  }
+
+  export type JobSumOrderByAggregateInput = {
+    yearsOfExperience?: SortOrder
+    numberOfRoles?: SortOrder
+    shortlistSize?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
   export type JsonNullableWithAggregatesFilter<$PrismaModel = never> = 
     | PatchUndefined<
@@ -10347,6 +10531,14 @@ export namespace Prisma {
     connect?: ApplicationWhereUniqueInput | ApplicationWhereUniqueInput[]
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type JobUpdatetopApplicantsInput = {
     set?: string[]
     push?: string | string[]
@@ -10562,6 +10754,33 @@ export namespace Prisma {
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
   export type NestedJsonNullableFilter<$PrismaModel = never> = 
     | PatchUndefined<
         Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -10665,6 +10884,9 @@ export namespace Prisma {
     requirements: string
     salary?: string | null
     contactEmail: string
+    yearsOfExperience?: number
+    numberOfRoles?: number
+    shortlistSize?: number
     applicationUrl?: string | null
     isRemote?: boolean
     applicationDeadline?: Date | string | null
@@ -10689,6 +10911,9 @@ export namespace Prisma {
     requirements: string
     salary?: string | null
     contactEmail: string
+    yearsOfExperience?: number
+    numberOfRoles?: number
+    shortlistSize?: number
     applicationUrl?: string | null
     isRemote?: boolean
     applicationDeadline?: Date | string | null
@@ -10841,6 +11066,9 @@ export namespace Prisma {
     requirements?: StringFilter<"Job"> | string
     salary?: StringNullableFilter<"Job"> | string | null
     contactEmail?: StringFilter<"Job"> | string
+    yearsOfExperience?: IntFilter<"Job"> | number
+    numberOfRoles?: IntFilter<"Job"> | number
+    shortlistSize?: IntFilter<"Job"> | number
     applicationUrl?: StringNullableFilter<"Job"> | string | null
     isRemote?: BoolFilter<"Job"> | boolean
     applicationDeadline?: DateTimeNullableFilter<"Job"> | Date | string | null
@@ -11151,6 +11379,9 @@ export namespace Prisma {
     requirements: string
     salary?: string | null
     contactEmail: string
+    yearsOfExperience?: number
+    numberOfRoles?: number
+    shortlistSize?: number
     applicationUrl?: string | null
     isRemote?: boolean
     applicationDeadline?: Date | string | null
@@ -11175,6 +11406,9 @@ export namespace Prisma {
     requirements: string
     salary?: string | null
     contactEmail: string
+    yearsOfExperience?: number
+    numberOfRoles?: number
+    shortlistSize?: number
     applicationUrl?: string | null
     isRemote?: boolean
     applicationDeadline?: Date | string | null
@@ -11246,6 +11480,9 @@ export namespace Prisma {
     requirements?: StringFieldUpdateOperationsInput | string
     salary?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
+    yearsOfExperience?: IntFieldUpdateOperationsInput | number
+    numberOfRoles?: IntFieldUpdateOperationsInput | number
+    shortlistSize?: IntFieldUpdateOperationsInput | number
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
     applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11270,6 +11507,9 @@ export namespace Prisma {
     requirements?: StringFieldUpdateOperationsInput | string
     salary?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
+    yearsOfExperience?: IntFieldUpdateOperationsInput | number
+    numberOfRoles?: IntFieldUpdateOperationsInput | number
+    shortlistSize?: IntFieldUpdateOperationsInput | number
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
     applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11356,6 +11596,9 @@ export namespace Prisma {
     requirements: string
     salary?: string | null
     contactEmail: string
+    yearsOfExperience?: number
+    numberOfRoles?: number
+    shortlistSize?: number
     applicationUrl?: string | null
     isRemote?: boolean
     applicationDeadline?: Date | string | null
@@ -11466,6 +11709,9 @@ export namespace Prisma {
     requirements?: StringFieldUpdateOperationsInput | string
     salary?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
+    yearsOfExperience?: IntFieldUpdateOperationsInput | number
+    numberOfRoles?: IntFieldUpdateOperationsInput | number
+    shortlistSize?: IntFieldUpdateOperationsInput | number
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
     applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11490,6 +11736,9 @@ export namespace Prisma {
     requirements?: StringFieldUpdateOperationsInput | string
     salary?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
+    yearsOfExperience?: IntFieldUpdateOperationsInput | number
+    numberOfRoles?: IntFieldUpdateOperationsInput | number
+    shortlistSize?: IntFieldUpdateOperationsInput | number
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
     applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -11514,6 +11763,9 @@ export namespace Prisma {
     requirements?: StringFieldUpdateOperationsInput | string
     salary?: NullableStringFieldUpdateOperationsInput | string | null
     contactEmail?: StringFieldUpdateOperationsInput | string
+    yearsOfExperience?: IntFieldUpdateOperationsInput | number
+    numberOfRoles?: IntFieldUpdateOperationsInput | number
+    shortlistSize?: IntFieldUpdateOperationsInput | number
     applicationUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isRemote?: BoolFieldUpdateOperationsInput | boolean
     applicationDeadline?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

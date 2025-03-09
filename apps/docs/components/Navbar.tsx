@@ -8,7 +8,7 @@ import { Badge } from "./ui/badge";
 function Navbar() {
   return (
     <div className="border-b">
-      <div className="flex h-16 items-center md:px-16 px-8">
+      <div className="flex h-16 items-center md:px-16 px-8 sticky top-0 z-10 bg-white">
         <div className="font-semibold">
             CVision
             <Badge className="ml-2 rounded-full bg-green-700 hover:bg-green-700">Recruiter</Badge>

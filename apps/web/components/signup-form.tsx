@@ -23,7 +23,7 @@ export function SignupForm({
     try {
       setIsLoading(true);
       await signUp(email, password, name);
-      window.location.href = '/dashboard'; // Redirect to home page after successful
+      window.location.href = '/dashboard/jobs'; // Redirect to home page after successful
     } catch (error) {
       console.error("Signup failed:", error);
       // Optionally show error message
@@ -37,6 +37,7 @@ export function SignupForm({
       setIsLoading(true);
       await signInWithGoogle();
       // Optionally redirect or show success message
+      window.location.href = '/dashboard/jobs'; // Redirect to home page after successful sign in
     } catch (error) {
       console.error("Google sign-in failed:", error);
       // Optionally show error message

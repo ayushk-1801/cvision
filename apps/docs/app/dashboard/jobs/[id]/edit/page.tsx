@@ -15,102 +15,85 @@ import {
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { Skeleton } from '@/components/ui/skeleton'
-import { ArrowLeft, Loader2 } from 'lucide-react'
-import { useUser } from "@/lib/hooks/use-user"
+import { format } from 'date-fns'
 
-interface Job {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  description: string;
-  requirements: string;
-  salary: string | null;
-  isRemote: boolean;
-  isActive: boolean;
-  applicationDeadline: string | null;
-  industry: string | null;
-  jobType: string | null;
-  experienceLevel: string | null;
-  contactEmail: string;
-  applicationUrl: string | null;
+interface JobEditPageProps {
+  params: {
+    id: string
+  }
 }
 
-export default function EditJobPage({ params }: { params: { id: string } }) {
+export default function JobEditPage({ params }: JobEditPageProps) {
   const router = useRouter()
-  const { user } = useUser()
+  const jobId = params.id
   const [isLoading, setIsLoading] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isFetching, setIsFetching] = useState(true)
   const [error, setError] = useState('')
-  const [job, setJob] = useState<Job | null>(null)
   const [formData, setFormData] = useState({
     title: '',
     company: '',
     location: '',
     description: '',
-    requirements: '',
     salary: '',
-    jobType: '',
-    experienceLevel: '',
-    industry: '',
+    jobType: 'Full Time',
+    experienceLevel: 'Entry Level',
+    industry: 'Technology',
     isRemote: false,
-    isActive: true,
+    requirements: '',
     applicationDeadline: '',
     contactEmail: '',
+    isActive: true,
+    yearsOfExperience: 0,
+    numberOfRoles: 1,
+    shortlistSize: 5,
     applicationUrl: '',
   })
 
   useEffect(() => {
-    const fetchJobDetails = async () => {
+    async function fetchJob() {
       try {
-        setIsLoading(true)
-        const response = await fetch(`/api/jobs/${params.id}`)
+        const response = await fetch(`/api/jobs/${jobId}`)
         
         if (!response.ok) {
-          throw new Error('Failed to fetch job details')
+          throw new Error('Failed to fetch job data')
         }
         
-        const data = await response.json()
-        setJob(data)
+        const jobData = await response.json()
         
-        // Use expiresAt as applicationDeadline if it's not available in the API response
-        const deadlineField = data.applicationDeadline || data.expiresAt;
-        
-        // Convert dates to YYYY-MM-DD format for input fields
-        const formattedDeadline = deadlineField
-          ? new Date(deadlineField).toISOString().split('T')[0]
+        // Format the date for the form input if it exists
+        const formattedDeadline = jobData.expiresAt 
+          ? format(new Date(jobData.expiresAt), 'yyyy-MM-dd')
           : ''
-
+          
         setFormData({
-          title: data.title || '',
-          company: data.company || '',
-          location: data.location || '',
-          description: data.description || '',
-          requirements: data.requirements || '',
-          salary: data.salary || '',
-          jobType: data.jobType || '',
-          experienceLevel: data.experienceLevel || '',
-          industry: data.industry || '',
-          isRemote: data.isRemote || false,
-          isActive: data.isActive,
+          title: jobData.title || '',
+          company: jobData.company || '',
+          location: jobData.location || '',
+          description: jobData.description || '',
+          salary: jobData.salary || '',
+          jobType: jobData.jobType || 'Full Time',
+          experienceLevel: jobData.experienceLevel || 'Entry Level',
+          industry: jobData.industry || 'Technology',
+          isRemote: jobData.isRemote || false,
+          requirements: jobData.requirements || '',
           applicationDeadline: formattedDeadline,
-          contactEmail: data.contactEmail || '',
-          applicationUrl: data.applicationUrl || '',
+          contactEmail: jobData.contactEmail || '',
+          isActive: jobData.isActive !== undefined ? jobData.isActive : true,
+          yearsOfExperience: jobData.yearsOfExperience || 0,
+          numberOfRoles: jobData.numberOfRoles || 1,
+          shortlistSize: jobData.shortlistSize || 5,
+          applicationUrl: jobData.applicationUrl || '',
         })
       } catch (err) {
-        console.error('Error fetching job details:', err)
-        setError('Failed to load job details')
+        console.error('Error fetching job:', err)
+        setError('Failed to load job data. Please try again.')
       } finally {
-        setIsLoading(false)
+        setIsFetching(false)
       }
     }
-
-    if (user) {
-      fetchJobDetails()
-    }
-  }, [params.id, user])
+    
+    fetchJob()
+  }, [jobId])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -127,23 +110,16 @@ export default function EditJobPage({ params }: { params: { id: string } }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
+    setIsLoading(true)
     setError('')
 
     try {
-      // Prepare the data for API submission
-      const submissionData = {
-        ...formData,
-        // Make sure we're only sending null if empty
-        applicationUrl: formData.applicationUrl.trim() || null,
-      }
-      
-      const response = await fetch(`/api/jobs/${params.id}`, {
+      const response = await fetch(`/api/jobs/${jobId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(submissionData),
+        body: JSON.stringify(formData),
       })
 
       if (!response.ok) {
@@ -151,72 +127,22 @@ export default function EditJobPage({ params }: { params: { id: string } }) {
         throw new Error(errorData.error || 'Failed to update job')
       }
 
-      router.push(`/dashboard/jobs/${params.id}`)
+      router.push('/dashboard/jobs')
+      router.refresh()
     } catch (err) {
       console.error('Error updating job:', err)
-      setError(err instanceof Error ? err.message : 'Failed to update job')
+      setError(err instanceof Error ? err.message : 'An unknown error occurred')
     } finally {
-      setIsSubmitting(false)
+      setIsLoading(false)
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="container mx-auto py-8">
-        <div className="mb-6">
-          <Button variant="ghost" size="sm" disabled>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-        </div>
-        <Card>
-          <CardHeader>
-            <Skeleton className="h-8 w-64" />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="space-y-2">
-                  <Skeleton className="h-4 w-24" />
-                  <Skeleton className="h-10 w-full" />
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  if (error && !job) {
-    return (
-      <div className="container mx-auto py-8">
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-center py-10">
-              <h3 className="text-lg font-medium text-red-500 mb-2">
-                {error}
-              </h3>
-              <p className="text-slate-500 mb-6">
-                We couldn't load this job. It may have been removed or you don't have permission to edit it.
-              </p>
-              <Button onClick={() => router.back()}>Go Back</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    )
+  if (isFetching) {
+    return <div className="flex justify-center items-center h-96">Loading...</div>
   }
 
   return (
     <div className="container mx-auto py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <Button variant="ghost" size="sm" onClick={() => router.back()}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to job
-        </Button>
-      </div>
-
       <h1 className="text-3xl font-bold mb-6">Edit Job Position</h1>
 
       {error && (
@@ -343,6 +269,59 @@ export default function EditJobPage({ params }: { params: { id: string } }) {
               </div>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="yearsOfExperience">Years of Experience</Label>
+                <Input
+                  id="yearsOfExperience"
+                  name="yearsOfExperience"
+                  type="number"
+                  min="0"
+                  value={formData.yearsOfExperience}
+                  onChange={handleInputChange}
+                  placeholder="e.g. 2"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="numberOfRoles">Number of Positions</Label>
+                <Input
+                  id="numberOfRoles"
+                  name="numberOfRoles"
+                  type="number"
+                  min="1"
+                  value={formData.numberOfRoles}
+                  onChange={handleInputChange}
+                  placeholder="e.g. 1"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="shortlistSize">Shortlist Size</Label>
+                <Input
+                  id="shortlistSize"
+                  name="shortlistSize"
+                  type="number"
+                  min="1"
+                  value={formData.shortlistSize}
+                  onChange={handleInputChange}
+                  placeholder="e.g. 5"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="applicationUrl">Application URL (Optional)</Label>
+              <Input
+                id="applicationUrl"
+                name="applicationUrl"
+                type="url"
+                value={formData.applicationUrl}
+                onChange={handleInputChange}
+                placeholder="https://company.com/job-application"
+              />
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="description">Job Description *</Label>
               <Textarea
@@ -368,8 +347,6 @@ export default function EditJobPage({ params }: { params: { id: string } }) {
                 required
               />
             </div>
-
-            <Separator />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
@@ -397,18 +374,6 @@ export default function EditJobPage({ params }: { params: { id: string } }) {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="applicationUrl">External Application URL</Label>
-              <Input
-                id="applicationUrl"
-                name="applicationUrl"
-                type="url"
-                value={formData.applicationUrl}
-                onChange={handleInputChange}
-                placeholder="e.g. https://yourcompany.com/careers/apply"
-              />
-            </div>
-
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <Checkbox 
@@ -418,14 +383,14 @@ export default function EditJobPage({ params }: { params: { id: string } }) {
                 />
                 <Label htmlFor="isRemote">This is a remote position</Label>
               </div>
-              
+
               <div className="flex items-center space-x-2">
                 <Checkbox 
                   id="isActive" 
                   checked={formData.isActive}
                   onCheckedChange={(checked) => handleCheckboxChange('isActive', checked === true)}
                 />
-                <Label htmlFor="isActive">List as active job</Label>
+                <Label htmlFor="isActive">Job is active</Label>
               </div>
             </div>
 
@@ -433,18 +398,13 @@ export default function EditJobPage({ params }: { params: { id: string } }) {
               <Button 
                 type="button" 
                 variant="outline" 
-                onClick={() => router.push(`/dashboard/jobs/${params.id}`)}
-                disabled={isSubmitting}
+                onClick={() => router.push('/dashboard/jobs')}
+                disabled={isLoading}
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
-                  </>
-                ) : 'Save Changes'}
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? 'Saving...' : 'Save Changes'}
               </Button>
             </CardFooter>
           </form>

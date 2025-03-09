@@ -266,7 +266,6 @@ export default function JobsPage() {
                     <Skeleton className="h-4 w-1/5" />
                     <Skeleton className="h-4 w-1/6" />
                   </div>
-                  <Skeleton className="h-24 w-full" />
                 </div>
               </CardContent>
             </Card>

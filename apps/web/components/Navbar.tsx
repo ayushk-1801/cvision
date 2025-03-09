@@ -6,7 +6,7 @@ import Image from "next/image";
 
 function Navbar() {
   return (
-    <div className="border-b">
+    <div className="border-b sticky top-0 z-10 bg-white">
       <div className="flex h-16 items-center md:px-16 px-8">
         <div className="font-semibold">
             CVision

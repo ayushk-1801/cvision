@@ -1,4 +1,5 @@
 import "./globals.css";
+import { GeistSans } from 'geist/font/sans';
 
 export const metadata = {
   title: 'CVision',
@@ -12,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className={GeistSans.className}>
         {children}
       </body>
     </html>

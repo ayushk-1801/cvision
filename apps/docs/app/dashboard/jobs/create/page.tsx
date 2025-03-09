@@ -33,6 +33,10 @@ export default function CreateJobPage() {
     requirements: '',
     applicationDeadline: '',
     contactEmail: '',
+    yearsOfExperience: 0,
+    numberOfRoles: 1,
+    shortlistSize: 5,
+    applicationUrl: '',
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -203,6 +207,59 @@ export default function CreateJobPage() {
                   placeholder="e.g. $60,000 - $80,000"
                 />
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="yearsOfExperience">Years of Experience</Label>
+                <Input
+                  id="yearsOfExperience"
+                  name="yearsOfExperience"
+                  type="number"
+                  min="0"
+                  value={formData.yearsOfExperience}
+                  onChange={handleInputChange}
+                  placeholder="e.g. 2"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="numberOfRoles">Number of Positions</Label>
+                <Input
+                  id="numberOfRoles"
+                  name="numberOfRoles"
+                  type="number"
+                  min="1"
+                  value={formData.numberOfRoles}
+                  onChange={handleInputChange}
+                  placeholder="e.g. 1"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="shortlistSize">Shortlist Size</Label>
+                <Input
+                  id="shortlistSize"
+                  name="shortlistSize"
+                  type="number"
+                  min="1"
+                  value={formData.shortlistSize}
+                  onChange={handleInputChange}
+                  placeholder="e.g. 5"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="applicationUrl">Application URL (Optional)</Label>
+              <Input
+                id="applicationUrl"
+                name="applicationUrl"
+                type="url"
+                value={formData.applicationUrl}
+                onChange={handleInputChange}
+                placeholder="https://company.com/job-application"
+              />
             </div>
 
             <div className="space-y-2">

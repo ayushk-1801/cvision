@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@repo/database";
 import { getSession } from "@/server/users";
 
@@ -107,7 +107,7 @@ export async function GET(request: NextRequest) {
     const hasNextPage = page < totalPages;
     const hasPrevPage = page > 1;
     
-    return new Response(
+    return new NextResponse(
       JSON.stringify({
         jobs,
         pagination: {
@@ -128,7 +128,7 @@ export async function GET(request: NextRequest) {
     );
   } catch (error) {
     console.error('Error fetching jobs:', error);
-    return new Response(
+    return new NextResponse(
       JSON.stringify({ error: 'Failed to fetch jobs' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
     const userId = session?.user?.id;
     
     if (!userId) {
-      return new Response(
+      return new NextResponse(
         JSON.stringify({ error: 'Unauthorized. You must be logged in to create a job.' }),
         { status: 401, headers: { 'Content-Type': 'application/json' } }
       );
@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
     
     for (const field of requiredFields) {
       if (!jobData[field]) {
-        return new Response(
+        return new NextResponse(
           JSON.stringify({ error: `Missing required field: ${field}` }),
           { status: 400, headers: { 'Content-Type': 'application/json' } }
         );
@@ -180,16 +180,21 @@ export async function POST(request: NextRequest) {
         contactEmail: jobData.contactEmail,
         isActive: true,
         recruiterId: userId,
+        // Add new fields from schema
+        yearsOfExperience: parseInt(jobData.yearsOfExperience) || 0,
+        numberOfRoles: parseInt(jobData.numberOfRoles) || 1,
+        shortlistSize: parseInt(jobData.shortlistSize) || 5,
+        applicationUrl: jobData.applicationUrl || null,
       },
     });
     
-    return new Response(
+    return new NextResponse(
       JSON.stringify(createdJob),
       { status: 201, headers: { 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('Error creating job:', error);
-    return new Response(
+    return new NextResponse(
       JSON.stringify({ error: 'Failed to create job position' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );

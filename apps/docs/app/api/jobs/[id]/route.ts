@@ -19,6 +19,9 @@ const jobUpdateSchema = z.object({
   contactEmail: z.string().email("Invalid email address"),
   applicationUrl: z.string().url("Invalid URL").optional().nullable().or(z.literal('')),
   applicationDeadline: z.string().optional().nullable(),
+  yearsOfExperience: z.number().nonnegative().default(0).or(z.string().regex(/^\d+$/).transform(Number)),
+  numberOfRoles: z.number().positive().default(1).or(z.string().regex(/^\d+$/).transform(Number)),
+  shortlistSize: z.number().positive().default(5).or(z.string().regex(/^\d+$/).transform(Number)),
 });
 
 // Get job details
@@ -139,6 +142,10 @@ export async function PATCH(
         applicationUrl: validatedData.applicationUrl,
         // Use expiresAt to store applicationDeadline since that's in the schema
         expiresAt: deadline,
+        // Add new fields
+        yearsOfExperience: validatedData.yearsOfExperience,
+        numberOfRoles: validatedData.numberOfRoles,
+        shortlistSize: validatedData.shortlistSize,
       };
       
       // Update job

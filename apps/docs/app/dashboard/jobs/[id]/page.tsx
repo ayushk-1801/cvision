@@ -24,6 +24,8 @@ import {
   MessageSquare,
   AlertTriangle,
   CheckCircle2,
+  LinkIcon,
+  UserIcon,
 } from "lucide-react";
 import { useUser } from "@/lib/hooks/use-user";
 
@@ -54,6 +56,9 @@ interface Job {
   expiresAt: string | null;
   applicationUrl: string | null;
   contactEmail: string;
+  yearsOfExperience: number | null;
+  numberOfRoles: number | null;
+  shortlistSize: number | null;
 }
 
 export default function JobDetailPage({ params }: { params: { id: string } }) {
@@ -528,6 +533,97 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
               </CardContent>
             </Card>
           )}
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Job Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {job.salary && (
+                <div className="flex items-start space-x-3">
+                  <div className="mt-0.5">$</div>
+                  <div>
+                    <div className="font-medium">Salary</div>
+                    <div className="text-sm text-gray-500">{job.salary}</div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex items-start space-x-3">
+                <MapPin className="h-5 w-5 mt-0.5 text-gray-500" />
+                <div>
+                  <div className="font-medium">Location</div>
+                  <div className="text-sm text-gray-500">{job.location}</div>
+                </div>
+              </div>
+              
+              {/* New field: Years of Experience */}
+              <div className="flex items-start space-x-3">
+                <BriefcaseBusiness className="h-5 w-5 mt-0.5 text-gray-500" />
+                <div>
+                  <div className="font-medium">Years of Experience</div>
+                  <div className="text-sm text-gray-500">{job.yearsOfExperience || 0} years</div>
+                </div>
+              </div>
+              
+              {/* New field: Number of Roles */}
+              <div className="flex items-start space-x-3">
+                <Users className="h-5 w-5 mt-0.5 text-gray-500" />
+                <div>
+                  <div className="font-medium">Number of Positions</div>
+                  <div className="text-sm text-gray-500">{job.numberOfRoles || 1}</div>
+                </div>
+              </div>
+              
+              {/* New field: Shortlist Size */}
+              <div className="flex items-start space-x-3">
+                <UserIcon className="h-5 w-5 mt-0.5 text-gray-500" />
+                <div>
+                  <div className="font-medium">Shortlist Size</div>
+                  <div className="text-sm text-gray-500">{job.shortlistSize || 5} candidates</div>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <Calendar className="h-5 w-5 mt-0.5 text-gray-500" />
+                <div>
+                  <div className="font-medium">Posted On</div>
+                  <div className="text-sm text-gray-500">{formatDate(job.createdAt)}</div>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <Clock className="h-5 w-5 mt-0.5 text-gray-500" />
+                <div>
+                  <div className="font-medium">Application Deadline</div>
+                  <div className="text-sm text-gray-500">{formatDate(getApplicationDeadline(job))}</div>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <MessageSquare className="h-5 w-5 mt-0.5 text-gray-500" />
+                <div>
+                  <div className="font-medium">Contact Email</div>
+                  <div className="text-sm text-gray-500">{job.contactEmail}</div>
+                </div>
+              </div>
+              
+              {/* New field: Application URL */}
+              {job.applicationUrl && (
+                <div className="flex items-start space-x-3">
+                  <LinkIcon className="h-5 w-5 mt-0.5 text-gray-500" />
+                  <div>
+                    <div className="font-medium">Application URL</div>
+                    <div className="text-sm text-blue-500 hover:text-blue-700">
+                      <a href={job.applicationUrl} target="_blank" rel="noopener noreferrer">
+                        Apply externally
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

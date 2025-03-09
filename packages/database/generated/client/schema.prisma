@@ -82,6 +82,9 @@ model Job {
   requirements        String
   salary              String?
   contactEmail        String
+  yearsOfExperience   Int           @default(0)
+  numberOfRoles       Int           @default(1)
+  shortlistSize       Int           @default(5)
   applicationUrl      String?
   isRemote            Boolean       @default(false)
   applicationDeadline DateTime?
