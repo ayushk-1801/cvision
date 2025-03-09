@@ -1,12 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,11 +32,15 @@ interface Job {
   id: string;
   title: string;
   company: string;
+  description?: string;
+  yearsOfExperience?: number;
+  shortlistSize?: number;
 }
 
 const applicationSchema = z.object({
-  resume: z.instanceof(File, { message: "Please upload your resume" })
-    .refine(file => file.size < 5000000, "File size should be less than 5MB"),
+  resume: z
+    .instanceof(File, { message: "Please upload your resume" })
+    .refine((file) => file.size < 5000000, "File size should be less than 5MB"),
   coverLetter: z.string().optional(),
   phoneNumber: z.string().min(1, "Phone number is required"),
   linkedinProfile: z.string().optional(),
@@ -37,15 +55,16 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  
+  const [analyzingResume, setAnalyzingResume] = useState<boolean>(false);
+
   const form = useForm<ApplicationForm>({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
-      coverLetter: '',
-      phoneNumber: '',
-      linkedinProfile: '',
-      portfolioWebsite: '',
-    }
+      coverLetter: "",
+      phoneNumber: "",
+      linkedinProfile: "",
+      portfolioWebsite: "",
+    },
   });
 
   useEffect(() => {
@@ -53,20 +72,23 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
       try {
         setIsLoading(true);
         const response = await fetch(`/api/jobs/${params.id}`);
-        
+
         if (!response.ok) {
-          throw new Error('Failed to fetch job details');
+          throw new Error("Failed to fetch job details");
         }
-        
+
         const data = await response.json();
         setJob({
           id: data.id,
           title: data.title,
-          company: data.company
+          company: data.company,
+          description: data.description + "\n\n" + data.requirements,
+          yearsOfExperience: data.yearsOfExperience || 0,
+          shortlistSize: data.shortlistSize || 5,
         });
       } catch (err) {
-        console.error('Error fetching job details:', err);
-        setError('Failed to load job details. Please try again.');
+        console.error("Error fetching job details:", err);
+        setError("Failed to load job details. Please try again.");
       } finally {
         setIsLoading(false);
       }
@@ -75,44 +97,159 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
     fetchJobDetails();
   }, [params.id]);
 
+  const analyzeResume = async (
+    resumeFile: File,
+    jobData: Job
+  ): Promise<any> => {
+    try {
+      setAnalyzingResume(true);
+
+      // Ensure we have complete job data before proceeding
+      if (!jobData || !jobData.title) {
+        throw new Error("Missing job data for resume analysis");
+      }
+
+      console.log("🔍 Starting resume analysis...");
+      console.log(
+        "📄 Resume file:",
+        resumeFile.name,
+        "Size:",
+        resumeFile.size,
+        "Type:",
+        resumeFile.type
+      );
+      console.log("💼 Complete job data:", jobData);
+
+      const formData = new FormData();
+      formData.append("resume_file", resumeFile);
+      formData.append("job_title", jobData.title);
+      formData.append("job_description", jobData.description || "");
+      formData.append("application_id", "temp-id");
+      formData.append("job_id", params.id);
+      formData.append("n_years", String(jobData.yearsOfExperience || 0));
+      formData.append("N", String(jobData.shortlistSize || 5));
+
+      console.log("📤 Sending to API:", {
+        job_title: jobData.title,
+        job_description:
+          jobData.description?.substring(0, 50) + "..." || "(empty)",
+        job_id: params.id,
+        n_years: jobData.yearsOfExperience || 0,
+        N: jobData.shortlistSize || 5,
+      });
+
+      const apiUrl =
+        process.env.NEXT_PUBLIC_CV_API_URL || "http://localhost:8000";
+      const endpoint = `${apiUrl}/submit_application/`;
+      console.log("🚀 Sending request to:", endpoint);
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: formData,
+      });
+
+      console.log("📥 Received response with status:", response.status);
+      if (response.ok) {
+        console.log("response", response);
+      }
+      if (!response.ok) {
+        throw new Error(`CV analysis failed! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("✅ CV Analysis Result:", result);
+
+      // Extract fields correctly from the response
+      return {
+        similarity: result.similarity || 0,
+        reason: result.reason || "", // This is the CV analysis text
+        fullAnalysis: result,
+      };
+    } catch (error) {
+      console.error("Error analyzing resume:", error);
+      throw error;
+    } finally {
+      setAnalyzingResume(false);
+    }
+  };
+
   const onSubmit = async (data: ApplicationForm) => {
     try {
       setIsSubmitting(true);
-      
+
       // Create form data for file upload
       const formData = new FormData();
-      formData.append('resume', data.resume);
-      formData.append('jobId', params.id);
-      
+      formData.append("resume", data.resume);
+      formData.append("jobId", params.id);
+
       if (data.coverLetter) {
-        formData.append('coverLetter', data.coverLetter);
+        formData.append("coverLetter", data.coverLetter);
       }
-      
-      formData.append('phoneNumber', data.phoneNumber);
-      
+
+      formData.append("phoneNumber", data.phoneNumber);
+
       if (data.linkedinProfile) {
-        formData.append('linkedinProfile', data.linkedinProfile);
+        formData.append("linkedinProfile", data.linkedinProfile);
       }
-      
+
       if (data.portfolioWebsite) {
-        formData.append('portfolioWebsite', data.portfolioWebsite);
+        formData.append("portfolioWebsite", data.portfolioWebsite);
       }
-      
-      const response = await fetch('/api/applications', {
-        method: 'POST',
+
+      // Analyze the resume before submitting the application
+      let cvAnalysisResults = null;
+      try {
+        if (!job) {
+          throw new Error("Job details unavailable for resume analysis");
+        }
+
+        cvAnalysisResults = await analyzeResume(data.resume, job);
+
+        // Add CV analysis results to form data
+        if (cvAnalysisResults) {
+          formData.append(
+            "matchScore",
+            cvAnalysisResults.similarity.toString()
+          );
+
+          // Store the CV analysis text in the correct field
+          // The "reason" field from the API response contains the analysis text
+          formData.append("cvAnalysis", cvAnalysisResults.reason || "");
+
+          // For better debugging, log what we're about to send
+          console.log("CV Analysis data being sent to server:", {
+            matchScore: cvAnalysisResults.similarity,
+            cvAnalysis: cvAnalysisResults.reason,
+          });
+
+          // Also send the full analysis result
+          formData.append(
+            "cvAnalysisResults",
+            JSON.stringify(cvAnalysisResults.fullAnalysis)
+          );
+        }
+      } catch (err) {
+        console.error("Resume analysis failed:", err);
+        // Continue with application submission even if analysis fails
+      }
+
+      const response = await fetch("/api/applications", {
+        method: "POST",
         body: formData,
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit application');
+        throw new Error(errorData.error || "Failed to submit application");
       }
-      
+
       // Redirect to applications page
-      router.push('/dashboard/applications');
-      
+      router.push("/dashboard/applications");
     } catch (err: any) {
-      console.error('Error submitting application:', err);
+      console.error("Error submitting application:", err);
+      setError(
+        err.message || "Failed to submit application. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -127,7 +264,7 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
             Back
           </Button>
         </div>
-        
+
         <Card className="max-w-3xl mx-auto">
           <CardHeader>
             <Skeleton className="h-6 w-64 mb-2" />
@@ -164,10 +301,11 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
           <CardContent className="p-6">
             <div className="text-center py-10">
               <h3 className="text-lg font-medium text-red-500 mb-2">
-                {error || 'Job not found'}
+                {error || "Job not found"}
               </h3>
               <p className="text-slate-500 mb-6">
-                We couldn't load this job posting. It may have been removed or there was an error.
+                We couldn't load this job posting. It may have been removed or
+                there was an error.
               </p>
               <Button onClick={() => router.back()}>Go Back</Button>
             </div>
@@ -185,13 +323,13 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
           Back to job
         </Button>
       </div>
-      
+
       <Card className="max-w-3xl mx-auto">
         <CardHeader>
           <CardTitle>Apply for {job.title}</CardTitle>
           <CardDescription>{job.company}</CardDescription>
         </CardHeader>
-        
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <CardContent>
@@ -226,7 +364,7 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="phoneNumber"
@@ -240,12 +378,14 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
                     </FormItem>
                   )}
                 />
-                                
+
                 <Separator />
-                
+
                 <div className="space-y-4">
-                  <h3 className="font-medium">Additional Information (Optional)</h3>
-                  
+                  <h3 className="font-medium">
+                    Additional Information (Optional)
+                  </h3>
+
                   <FormField
                     control={form.control}
                     name="linkedinProfile"
@@ -253,13 +393,16 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
                       <FormItem>
                         <FormLabel>LinkedIn Profile</FormLabel>
                         <FormControl>
-                          <Input placeholder="https://linkedin.com/in/yourprofile" {...field} />
+                          <Input
+                            placeholder="https://linkedin.com/in/yourprofile"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="portfolioWebsite"
@@ -267,28 +410,41 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
                       <FormItem>
                         <FormLabel>Portfolio Website</FormLabel>
                         <FormControl>
-                          <Input placeholder="https://yourportfolio.com" {...field} />
+                          <Input
+                            placeholder="https://yourportfolio.com"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
+
+                {error && (
+                  <div className="bg-red-50 p-3 rounded border border-red-200 text-red-600 text-sm">
+                    {error}
+                  </div>
+                )}
               </div>
             </CardContent>
-            
+
             <CardFooter className="flex justify-between mt-4">
-              <Button variant="outline" type="button" onClick={() => router.back()}>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => router.back()}
+              >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? (
+              <Button type="submit" disabled={isSubmitting || analyzingResume}>
+                {isSubmitting || analyzingResume ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Submitting...
+                    {analyzingResume ? "Analyzing Resume..." : "Submitting..."}
                   </>
                 ) : (
-                  'Submit Application'
+                  "Submit Application"
                 )}
               </Button>
             </CardFooter>

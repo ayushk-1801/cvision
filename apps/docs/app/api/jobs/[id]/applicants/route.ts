@@ -27,7 +27,8 @@ export async function GET(
         id: true,
         title: true,
         company: true,
-        recruiterId: true
+        recruiterId: true,
+        shortlistSize: true // Include shortlistSize for limiting results
       }
     });
     
@@ -50,18 +51,20 @@ export async function GET(
     const url = new URL(request.url);
     const status = url.searchParams.get('status');
     const search = url.searchParams.get('search');
+    const shortlisted = url.searchParams.get('shortlisted') === 'true';
     
     // Build filter conditions
     const filterConditions: any = {
       jobId: jobId
     };
     
-    if (status && status !== 'all') {
+    // Only apply status filter when not requesting shortlisted applicants
+    if (status && status !== 'all' && !shortlisted) {
       filterConditions.status = status;
     }
     
-    // Get applicants with pagination
-    const applicants = await prisma.application.findMany({
+    // Get applicants
+    let applicants = await prisma.application.findMany({
       where: filterConditions,
       include: {
         applicant: {
@@ -73,10 +76,16 @@ export async function GET(
           }
         }
       },
-      orderBy: {
-        createdAt: 'desc'
-      }
+      // Different ordering based on whether we want shortlisted or regular applicants
+      orderBy: shortlisted ? 
+        { matchScore: 'desc' } :  // Order by match score for shortlisted view
+        { createdAt: 'desc' }     // Default ordering by date
     });
+    
+    // If shortlisted view is requested, return only the top shortlistSize applicants
+    if (shortlisted) {
+      applicants = applicants.slice(0, job.shortlistSize);
+    }
     
     // If search is provided, filter results in memory
     let filteredApplicants = applicants;
@@ -84,7 +93,8 @@ export async function GET(
       const searchLower = search.toLowerCase();
       filteredApplicants = applicants.filter(app => 
         app.applicant.name.toLowerCase().includes(searchLower) ||
-        app.applicant.email.toLowerCase().includes(searchLower)
+        app.applicant.email.toLowerCase().includes(searchLower) ||
+        (app.cvAnalysis && app.cvAnalysis.toLowerCase().includes(searchLower))
       );
     }
     
@@ -93,7 +103,8 @@ export async function GET(
       job: {
         id: job.id,
         title: job.title,
-        company: job.company
+        company: job.company,
+        shortlistSize: job.shortlistSize
       },
       applicants: filteredApplicants
     });

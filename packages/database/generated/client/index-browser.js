@@ -200,7 +200,12 @@ exports.Prisma.ApplicationScalarFieldEnum = {
   jobId: 'jobId',
   applicantId: 'applicantId',
   notes: 'notes',
-  interviewDate: 'interviewDate'
+  interviewDate: 'interviewDate',
+  phoneNumber: 'phoneNumber',
+  linkedinProfile: 'linkedinProfile',
+  portfolioWebsite: 'portfolioWebsite',
+  matchScore: 'matchScore',
+  cvAnalysis: 'cvAnalysis'
 };
 
 exports.Prisma.SortOrder = {

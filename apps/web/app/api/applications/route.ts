@@ -1,128 +1,129 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@/server/users';
-import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
-import * as path from 'path';
-import { prisma } from '@repo/database';
-
-// Configure local upload directory
-const UPLOAD_DIR = path.join(process.cwd(), 'uploads', 'resumes');
-
-// Ensure upload directory exists
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@repo/database";
+import { uploadFile } from "@/lib/storage";
+import { getSession } from "@/server/users";
+import fs from 'fs/promises';
 
 export async function POST(req: NextRequest) {
   try {
-    // Verify authentication
     const session = await getSession();
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Parse multipart form data using native FormData
-    const formData = await req.formData();
-    
-    // Extract application data
-    const jobId = formData.get('jobId')?.toString();
-    const coverLetter = formData.get('coverLetter')?.toString() || null;
-    const phoneNumber = formData.get('phoneNumber')?.toString();
-    const linkedinProfile = formData.get('linkedinProfile')?.toString() || null;
-    const portfolioWebsite = formData.get('portfolioWebsite')?.toString() || null;
-    
-    // Validate required fields
-    if (!jobId) {
-      return NextResponse.json({ error: 'Job ID is required' }, { status: 400 });
-    }
-    
-    // Get the resume file
-    const resumeFile = formData.get('resume') as File | null;
-    if (!resumeFile) {
-      return NextResponse.json({ error: 'Resume file is required' }, { status: 400 });
-    }
-
-    // Validate file type
-    const allowedTypes = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ];
-
-    if (!allowedTypes.includes(resumeFile.type)) {
+    if (!session || !session.user) {
       return NextResponse.json(
-        { error: 'Invalid file type. Please upload a PDF, DOC, or DOCX file' },
-        { status: 400 }
+        { error: "You must be signed in to submit an application" },
+        { status: 401 }
       );
     }
 
-    // Create user directory if it doesn't exist
-    const userUploadDir = path.join(UPLOAD_DIR, session.user.id);
-    if (!fs.existsSync(userUploadDir)) {
-      fs.mkdirSync(userUploadDir, { recursive: true });
-    }
+    const userId = session.user.id;
+    const formData = await req.formData();
 
-    // Generate a unique filename
-    const fileExt = resumeFile.name.split('.').pop();
-    const uniqueFileName = `${uuidv4()}.${fileExt}`;
-    const filePath = path.join(userUploadDir, uniqueFileName);
+    // Get form fields
+    const jobId = formData.get("jobId") as string;
+    const resume = formData.get("resume") as File;
+    const coverLetter = formData.get("coverLetter") as string | null;
+    const phoneNumber = formData.get("phoneNumber") as string;
+    const linkedinProfile = formData.get("linkedinProfile") as string | null;
+    const portfolioWebsite = formData.get("portfolioWebsite") as string | null;
+    const cvAnalysisResultsJson = formData.get("cvAnalysisResults") as string | null;
+    const matchScore = formData.get("matchScore") ? parseFloat(formData.get("matchScore") as string) : null;
     
-    // Convert File to Buffer and save it
-    const fileBuffer = Buffer.from(await resumeFile.arrayBuffer());
-    fs.writeFileSync(filePath, fileBuffer);
+    // Get the CV analysis text which is in the cvAnalysis field
+    const cvAnalysis = formData.get("cvAnalysis") as string | null;
     
-    // Generate relative path for database storage
-    // This creates a path like '/uploads/resumes/{userId}/{filename}'
-    const relativePath = `/uploads/resumes/${session.user.id}/${uniqueFileName}`;
-    
-    // Check if user has already applied for this job
-    const existingApplication = await prisma.application.findUnique({
-      where: { 
-        jobId_applicantId: {
-          jobId: jobId,
-          applicantId: session.user.id
-        }
-      }
+    console.log("Received application with analysis:", {
+      cvAnalysis,
+      matchScore
     });
 
-    if (existingApplication) {
-      // Clean up the file we just saved
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
-      
+    if (!jobId || !resume) {
       return NextResponse.json(
-        { error: 'You have already applied for this job' },
+        { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    // Create application record in database
+    // Upload resume to storage service
+    const resumeUrl = await uploadFile(resume, `applications/${userId}/${jobId}/${Date.now()}`);
+
+    // Parse CV analysis results if available
+    let cvAnalysisResults = null;
+    if (cvAnalysisResultsJson) {
+      try {
+        cvAnalysisResults = JSON.parse(cvAnalysisResultsJson);
+      } catch (error) {
+        console.error("Failed to parse CV analysis results:", error);
+      }
+    }
+
+    // Create notes field that includes all the information we want to store
+    const notes = JSON.stringify({
+      phoneNumber: phoneNumber || null,
+      linkedinProfile: linkedinProfile || null,
+      portfolioWebsite: portfolioWebsite || null,
+      cvAnalysis: cvAnalysis || null,
+      cvAnalysisResults: cvAnalysisResults || null,
+    });
+
+    // Create the application - include the CV analysis data
     const application = await prisma.application.create({
       data: {
-        jobId: jobId,
-        applicantId: session.user.id,
-        resumeUrl: relativePath,
-        coverLetter: coverLetter,
-        status: 'pending',
-        notes: JSON.stringify({
+        jobId,
+        applicantId: userId,
+        resumeUrl,
+        coverLetter: coverLetter || undefined,
+        phoneNumber,
+        linkedinProfile,
+        portfolioWebsite,
+        cvAnalysis,  // Include cv analysis directly if the field exists in schema
+        notes,
+        ...(typeof matchScore === 'number' ? { matchScore } : {}),
+      },
+    });
+
+    // Update the job with applicant information if CV analysis provided data
+    if (cvAnalysisResults || cvAnalysis) {
+      // Get existing job data
+      const existingJob = await prisma.job.findUnique({ 
+        where: { id: jobId },
+        select: { applicants: true }
+      });
+      
+      // Prepare updated applicants data
+      const updatedApplicants = {
+        ...(existingJob?.applicants as object || {}),
+        [userId]: {
+          similarity: matchScore,
+          reason: cvAnalysis,  // Store the analysis text
+          applicationId: application.id,
           phoneNumber,
           linkedinProfile,
           portfolioWebsite,
-          submittedAt: new Date().toISOString()
-        })
-      }
-    });
+          ...cvAnalysisResults
+        }
+      };
+      
+      await prisma.job.update({
+        where: { id: jobId },
+        data: {
+          applicants: updatedApplicants
+        }
+      });
+    }
 
-    return NextResponse.json({ 
-      success: true, 
-      applicationId: application.id 
-    }, { status: 201 });
+    return NextResponse.json({ success: true, applicationId: application.id });
+  } catch (error: any) {
+    console.error("Error submitting application:", error);
     
-  } catch (error) {
-    console.error('Error processing application:', error);
+    // Check if it's a duplicate application
+    if (error.code === 'P2002') {
+      return NextResponse.json(
+        { error: "You have already applied to this job" },
+        { status: 409 }
+      );
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to process your application' },
+      { error: "Failed to submit application" },
       { status: 500 }
     );
   }
