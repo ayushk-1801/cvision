@@ -131,7 +131,7 @@ import os
 os.environ["GROQ_API_KEY"] = "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"
 
 
-llm = ChatGroq(temperature=0, model_name="gemma2-9b-it", model_kwargs={"response_format": {"type": "json_object"}})
+llm = ChatGroq(temperature=0, model_name="llama3-8b-8192", model_kwargs={"response_format": {"type": "json_object"}})
 
 
 from langchain.output_parsers import PydanticOutputParser
@@ -186,7 +186,9 @@ sim_template= PromptTemplate(
     partial_variables={"format_instructions": parser_sim.get_format_instructions()},
 )
 
-llm_similarity = sim_template | llm | parser_sim
+llm_sim = ChatGroq(temperature=0, model_name="gemma2-9b-it", model_kwargs={"response_format": {"type": "json_object"}})
+
+llm_similarity = sim_template | llm_sim | parser_sim
 
 from transformers import AutoTokenizer, AutoModelForMaskedLM , BertTokenizer, BertModel
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')

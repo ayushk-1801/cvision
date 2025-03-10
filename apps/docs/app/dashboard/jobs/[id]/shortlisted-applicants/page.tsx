@@ -419,14 +419,6 @@ export default function ShortlistedApplicantsPage({ params }: { params: { id: st
                   <Mail className="h-4 w-4 mr-1" />
                   Contact
                 </Button>
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={() => router.push(`/dashboard/jobs/${params.id}/applicants/${application.id}`)}
-                >
-                  <Eye className="h-4 w-4 mr-1" />
-                  Details
-                </Button>
               </CardFooter>
             </Card>
           ))}
