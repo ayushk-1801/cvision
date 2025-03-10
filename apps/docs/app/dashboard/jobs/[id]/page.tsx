@@ -447,27 +447,6 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
                   </div>
                 </CardContent>
               </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Contact Information</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div>
-                      <span className="text-sm text-slate-500">Contact Email</span>
-                      <p className="font-medium">{job.contactEmail}</p>
-                    </div>
-                    {job.applicationUrl && (
-                      <div>
-                        <span className="text-sm text-slate-500">Application URL</span>
-                        <p className="font-medium break-all">
-                          <a href={job.applicationUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{job.applicationUrl}</a>
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
             </>
           ) : (
             <>

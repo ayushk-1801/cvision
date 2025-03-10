@@ -63,8 +63,8 @@ export async function GET(
       filterConditions.status = status;
     }
     
-    // Get applicants
-    let applicants = await prisma.application.findMany({
+    // Get applicants with all fields including cvAnalysis
+    const applicants = await prisma.application.findMany({
       where: filterConditions,
       include: {
         applicant: {
@@ -76,26 +76,48 @@ export async function GET(
           }
         }
       },
-      // Different ordering based on whether we want shortlisted or regular applicants
-      orderBy: shortlisted ? 
-        { matchScore: 'desc' } :  // Order by match score for shortlisted view
-        { createdAt: 'desc' }     // Default ordering by date
+      orderBy: {
+        // Order by CV similarity score if available (high to low)
+        createdAt: 'desc'
+      }
+    });
+
+    // Sort applicants by cvAnalysis.similarity if available
+    const sortedApplicants = [...applicants].sort((a, b) => {
+      const scoreA = a.cvAnalysis && typeof a.cvAnalysis === 'object' && 'similarity' in a.cvAnalysis 
+                     ? (a.cvAnalysis as any).similarity 
+                     : 0;
+      const scoreB = b.cvAnalysis && typeof b.cvAnalysis === 'object' && 'similarity' in b.cvAnalysis 
+                     ? (b.cvAnalysis as any).similarity 
+                     : 0;
+      return scoreB - scoreA;  // Sort by descending similarity score
     });
     
     // If shortlisted view is requested, return only the top shortlistSize applicants
-    if (shortlisted) {
-      applicants = applicants.slice(0, job.shortlistSize);
-    }
+    let filteredApplicants = shortlisted 
+      ? sortedApplicants.slice(0, job.shortlistSize) 
+      : sortedApplicants;
     
     // If search is provided, filter results in memory
-    let filteredApplicants = applicants;
     if (search && search.trim() !== '') {
       const searchLower = search.toLowerCase();
-      filteredApplicants = applicants.filter(app => 
-        app.applicant.name.toLowerCase().includes(searchLower) ||
-        app.applicant.email.toLowerCase().includes(searchLower) ||
-        (app.cvAnalysis && app.cvAnalysis.toLowerCase().includes(searchLower))
-      );
+      filteredApplicants = filteredApplicants.filter(app => {
+        // Search in applicant name and email
+        const nameMatch = app.applicant.name.toLowerCase().includes(searchLower);
+        const emailMatch = app.applicant.email.toLowerCase().includes(searchLower);
+        
+        // Search in CV analysis text if available
+        let cvAnalysisMatch = false;
+        if (app.cvAnalysis && typeof app.cvAnalysis === 'object') {
+          const cv = app.cvAnalysis as any;
+          cvAnalysisMatch = 
+            (cv.skills && cv.skills.toLowerCase().includes(searchLower)) ||
+            (cv.reason && cv.reason.toLowerCase().includes(searchLower)) ||
+            (cv.projects && cv.projects.toLowerCase().includes(searchLower));
+        }
+        
+        return nameMatch || emailMatch || cvAnalysisMatch;
+      });
     }
     
     // Return job details and applicants

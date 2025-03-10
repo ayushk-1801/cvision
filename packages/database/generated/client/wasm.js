@@ -204,7 +204,6 @@ exports.Prisma.ApplicationScalarFieldEnum = {
   phoneNumber: 'phoneNumber',
   linkedinProfile: 'linkedinProfile',
   portfolioWebsite: 'portfolioWebsite',
-  matchScore: 'matchScore',
   cvAnalysis: 'cvAnalysis'
 };
 

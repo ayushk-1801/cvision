@@ -55,7 +55,6 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [analyzingResume, setAnalyzingResume] = useState<boolean>(false);
 
   const form = useForm<ApplicationForm>({
     resolver: zodResolver(applicationSchema),
@@ -97,82 +96,6 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
     fetchJobDetails();
   }, [params.id]);
 
-  const analyzeResume = async (
-    resumeFile: File,
-    jobData: Job
-  ): Promise<any> => {
-    try {
-      setAnalyzingResume(true);
-
-      // Ensure we have complete job data before proceeding
-      if (!jobData || !jobData.title) {
-        throw new Error("Missing job data for resume analysis");
-      }
-
-      console.log("🔍 Starting resume analysis...");
-      console.log(
-        "📄 Resume file:",
-        resumeFile.name,
-        "Size:",
-        resumeFile.size,
-        "Type:",
-        resumeFile.type
-      );
-      console.log("💼 Complete job data:", jobData);
-
-      const formData = new FormData();
-      formData.append("resume_file", resumeFile);
-      formData.append("job_title", jobData.title);
-      formData.append("job_description", jobData.description || "");
-      formData.append("application_id", "temp-id");
-      formData.append("job_id", params.id);
-      formData.append("n_years", String(jobData.yearsOfExperience || 0));
-      formData.append("N", String(jobData.shortlistSize || 5));
-
-      console.log("📤 Sending to API:", {
-        job_title: jobData.title,
-        job_description:
-          jobData.description?.substring(0, 50) + "..." || "(empty)",
-        job_id: params.id,
-        n_years: jobData.yearsOfExperience || 0,
-        N: jobData.shortlistSize || 5,
-      });
-
-      const apiUrl =
-        process.env.NEXT_PUBLIC_CV_API_URL || "http://localhost:8000";
-      const endpoint = `${apiUrl}/submit_application/`;
-      console.log("🚀 Sending request to:", endpoint);
-
-      const response = await fetch(endpoint, {
-        method: "POST",
-        body: formData,
-      });
-
-      console.log("📥 Received response with status:", response.status);
-      if (response.ok) {
-        console.log("response", response);
-      }
-      if (!response.ok) {
-        throw new Error(`CV analysis failed! Status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log("✅ CV Analysis Result:", result);
-
-      // Extract fields correctly from the response
-      return {
-        similarity: result.similarity || 0,
-        reason: result.reason || "", // This is the CV analysis text
-        fullAnalysis: result,
-      };
-    } catch (error) {
-      console.error("Error analyzing resume:", error);
-      throw error;
-    } finally {
-      setAnalyzingResume(false);
-    }
-  };
-
   const onSubmit = async (data: ApplicationForm) => {
     try {
       setIsSubmitting(true);
@@ -196,43 +119,15 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
         formData.append("portfolioWebsite", data.portfolioWebsite);
       }
 
-      // Analyze the resume before submitting the application
-      let cvAnalysisResults = null;
-      try {
-        if (!job) {
-          throw new Error("Job details unavailable for resume analysis");
-        }
-
-        cvAnalysisResults = await analyzeResume(data.resume, job);
-
-        // Add CV analysis results to form data
-        if (cvAnalysisResults) {
-          formData.append(
-            "matchScore",
-            cvAnalysisResults.similarity.toString()
-          );
-
-          // Store the CV analysis text in the correct field
-          // The "reason" field from the API response contains the analysis text
-          formData.append("cvAnalysis", cvAnalysisResults.reason || "");
-
-          // For better debugging, log what we're about to send
-          console.log("CV Analysis data being sent to server:", {
-            matchScore: cvAnalysisResults.similarity,
-            cvAnalysis: cvAnalysisResults.reason,
-          });
-
-          // Also send the full analysis result
-          formData.append(
-            "cvAnalysisResults",
-            JSON.stringify(cvAnalysisResults.fullAnalysis)
-          );
-        }
-      } catch (err) {
-        console.error("Resume analysis failed:", err);
-        // Continue with application submission even if analysis fails
+      // Send job details for backend processing
+      if (job) {
+        formData.append("jobTitle", job.title);
+        formData.append("jobDescription", job.description || "");
+        formData.append("yearsOfExperience", String(job.yearsOfExperience || 0));
+        formData.append("shortlistSize", String(job.shortlistSize || 5));
       }
 
+      // Submit the application (resume analysis will happen on the server)
       const response = await fetch("/api/applications", {
         method: "POST",
         body: formData,
@@ -437,11 +332,11 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting || analyzingResume}>
-                {isSubmitting || analyzingResume ? (
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {analyzingResume ? "Analyzing Resume..." : "Submitting..."}
+                    Submitting...
                   </>
                 ) : (
                   "Submit Application"

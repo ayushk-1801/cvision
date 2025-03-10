@@ -58,7 +58,7 @@ class FUllSimlarity (BaseModel):
     """Full Similarity between job and candidate"""
     similarity: Optional[float] = Field(description="Similarity between job and candidate, a float between 0 and 1")
     reason: Optional[str] = Field(description="Reason for the similarity score")
-
+    projects: Optional[str] = Field(description="Relevant skills user has used in projects and work experience")
 
 import PyPDF2
 # import docx
@@ -174,7 +174,7 @@ llm_job_parser = prompt_job | llm | parser_job
 
 parser_sim = PydanticOutputParser(pydantic_object= FUllSimlarity)
 prompt_template_sim = """\
-You are tasked with finding the similarity between a job description and a resume and a very very detailed reasoning\n
+You are tasked with finding the similarity between a job description and a resume and a very very detailed reasoning along with a analaysis of the user's projetcs and experience.\n
 {format_instructions}\n
 Resume text: {resume_text}\n 
 Job description: {job_description}
@@ -212,6 +212,7 @@ def compute_similarity(resume_pdf_path , job_title , JOB_DESCRIPTION , model, to
     candidate_data = resume_data
     candidate_data = convert_dates_to_datetime(candidate_data)
     job_data = convert_dates_to_datetime(job_data)
+    
 
 
 
@@ -240,10 +241,9 @@ def compute_similarity(resume_pdf_path , job_title , JOB_DESCRIPTION , model, to
         exper += project["project_title"] + " " + project["project_description"] + " , "
 
     if job_data["skills"] is None:
-        job_data["skills"] = ""
-
-    if len(job_data["skills"]) > 1:
-        job_skills = " , ".join(job_data["skills"])
+        job_skills = ""
+    elif len(job_data["skills"]) > 1:
+        job_skills = " , ".join(job_data["skills"])  
     job_exp = JOB_DESCRIPTION  
 
     # Tokenizing with padding to ensure uniform length
@@ -251,23 +251,39 @@ def compute_similarity(resume_pdf_path , job_title , JOB_DESCRIPTION , model, to
         tokens = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
         with torch.no_grad():
             return model(**tokens).last_hidden_state.mean(dim=1)
+    skills_use = True
+    try:
+        cand_embeds = tokenize_and_embed(cand_skills)
+        job_embeds = tokenize_and_embed(job_skills)
+        sim_skills = torch.cosine_similarity(cand_embeds, job_embeds)
+    except:
+        sim_edu = 0.5
+        skills_use = False
+    
+    exp_Use = True
+    try:
+        cand_embeds = tokenize_and_embed(exper)
+        job_embeds = tokenize_and_embed(job_exp)
+        sim_exp = torch.cosine_similarity(cand_embeds, job_embeds)
+    except:
+        sim_edu = 0.5
+        exp_Use = False
 
-    cand_embeds = tokenize_and_embed(cand_skills)
-    job_embeds = tokenize_and_embed(job_skills)
-    sim_skills = torch.cosine_similarity(cand_embeds, job_embeds)
-
-    cand_embeds = tokenize_and_embed(exper)
-    job_embeds = tokenize_and_embed(job_exp)
-    sim_exp = torch.cosine_similarity(cand_embeds, job_embeds)
 
     if job_data["experience"] is None:
         job_data["experience"] = ""
     if job_data["education"] is None:
         job_data["education"] = ""
     job_edu_text = job_data["education"] + " in " + job_data["experience"]
-    cand_embeds = tokenize_and_embed(cand_degrees)
-    job_embeds = tokenize_and_embed(job_edu_text)
-    sim_edu = torch.cosine_similarity(cand_embeds, job_embeds)
+    ed_use = True
+    try:
+        cand_embeds = tokenize_and_embed(cand_degrees)
+        job_embeds = tokenize_and_embed(job_edu_text)
+        sim_edu = torch.cosine_similarity(cand_embeds, job_embeds)
+    except:
+        sim_edu = 0.5
+        ed_use = False
+        
 
     n_years = n_years
     cand_work_exp = sum(
@@ -280,13 +296,26 @@ def compute_similarity(resume_pdf_path , job_title , JOB_DESCRIPTION , model, to
 
     wts = wts_no_work_exp_in_job if n_years is None else wts_work_exp_in_job
 
-    if n_years is not None:
-        sim_work_exp =   1 - abs(n_years - cand_work_exp) / n_years
-        sim = sim_skills * wts["skills"] + sim_exp * wts["experience"] + sim_edu * wts["education"] + sim_work_exp * wts["work_exp"]
+        
+    if skills_use and exp_Use and ed_use:
+        
+        if n_years is not None and n_years != 0:
+            sim_work_exp =   1 - abs(n_years - cand_work_exp) / n_years
+            sim = sim_skills * wts["skills"] + sim_exp * wts["experience"] + sim_edu * wts["education"] + sim_work_exp * wts["work_exp"]
+        else:
+            sim = sim_skills * wts["skills"] + sim_exp * wts["experience"] + sim_edu * wts["education"]
+        simlarity = ( sim + llm_score.similarity ) / 2
+        simlarity = simlarity.item()
+        simlarity = float(simlarity)
+        if cand_work_exp  is None:
+            cand_work_exp = 0
+        return {"similarity": simlarity, "reason": llm_score.reason , "n_years" : cand_work_exp , "skills" :cand_skills , "projects":llm_score.projects}
     else:
-        sim = sim_skills * wts["skills"] + sim_exp * wts["experience"] + sim_edu * wts["education"]
-
-    return ( sim + llm_score.similarity ) / 2 , llm_score.reason 
+        if n_years is not None and n_years != 0:
+            sim_work_exp =   1 - abs(n_years - cand_work_exp) / n_years
+            sim = sim_work_exp * wts["work_exp"]
+        simlarity = float(llm_score.similarity)
+        return {"similarity": simlarity, "reason": llm_score.reason , "n_years" : cand_work_exp , "skills" :cand_skills , "projects":llm_score.projects}
 
 
 
@@ -329,6 +358,7 @@ async def submit_application(
 
     output = compute_similarity( resume_pdf_path , job_title , job_description , model, tokenizer , llm_resume_parser , llm_job_parser , llm_similarity , n_years)
     print(output)
+    
     return output
 
 #rUNNING THE API
@@ -337,7 +367,6 @@ import uvicorn
 
 if __name__ == "__main__":
     uvicorn.run(app,  host="localhost", port=8000)
-
 
 
 

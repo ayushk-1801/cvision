@@ -12,6 +12,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "../web/components/Home-Navbar.tsx"  ],
   "exclude": ["node_modules"]
 }

@@ -7231,18 +7231,8 @@ export namespace Prisma {
 
   export type AggregateApplication = {
     _count: ApplicationCountAggregateOutputType | null
-    _avg: ApplicationAvgAggregateOutputType | null
-    _sum: ApplicationSumAggregateOutputType | null
     _min: ApplicationMinAggregateOutputType | null
     _max: ApplicationMaxAggregateOutputType | null
-  }
-
-  export type ApplicationAvgAggregateOutputType = {
-    matchScore: number | null
-  }
-
-  export type ApplicationSumAggregateOutputType = {
-    matchScore: number | null
   }
 
   export type ApplicationMinAggregateOutputType = {
@@ -7259,8 +7249,6 @@ export namespace Prisma {
     phoneNumber: string | null
     linkedinProfile: string | null
     portfolioWebsite: string | null
-    matchScore: number | null
-    cvAnalysis: string | null
   }
 
   export type ApplicationMaxAggregateOutputType = {
@@ -7277,8 +7265,6 @@ export namespace Prisma {
     phoneNumber: string | null
     linkedinProfile: string | null
     portfolioWebsite: string | null
-    matchScore: number | null
-    cvAnalysis: string | null
   }
 
   export type ApplicationCountAggregateOutputType = {
@@ -7295,19 +7281,10 @@ export namespace Prisma {
     phoneNumber: number
     linkedinProfile: number
     portfolioWebsite: number
-    matchScore: number
     cvAnalysis: number
     _all: number
   }
 
-
-  export type ApplicationAvgAggregateInputType = {
-    matchScore?: true
-  }
-
-  export type ApplicationSumAggregateInputType = {
-    matchScore?: true
-  }
 
   export type ApplicationMinAggregateInputType = {
     id?: true
@@ -7323,8 +7300,6 @@ export namespace Prisma {
     phoneNumber?: true
     linkedinProfile?: true
     portfolioWebsite?: true
-    matchScore?: true
-    cvAnalysis?: true
   }
 
   export type ApplicationMaxAggregateInputType = {
@@ -7341,8 +7316,6 @@ export namespace Prisma {
     phoneNumber?: true
     linkedinProfile?: true
     portfolioWebsite?: true
-    matchScore?: true
-    cvAnalysis?: true
   }
 
   export type ApplicationCountAggregateInputType = {
@@ -7359,7 +7332,6 @@ export namespace Prisma {
     phoneNumber?: true
     linkedinProfile?: true
     portfolioWebsite?: true
-    matchScore?: true
     cvAnalysis?: true
     _all?: true
   }
@@ -7402,18 +7374,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: ApplicationAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: ApplicationSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: ApplicationMinAggregateInputType
@@ -7444,8 +7404,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ApplicationCountAggregateInputType | true
-    _avg?: ApplicationAvgAggregateInputType
-    _sum?: ApplicationSumAggregateInputType
     _min?: ApplicationMinAggregateInputType
     _max?: ApplicationMaxAggregateInputType
   }
@@ -7464,11 +7422,8 @@ export namespace Prisma {
     phoneNumber: string | null
     linkedinProfile: string | null
     portfolioWebsite: string | null
-    matchScore: number | null
-    cvAnalysis: string | null
+    cvAnalysis: JsonValue | null
     _count: ApplicationCountAggregateOutputType | null
-    _avg: ApplicationAvgAggregateOutputType | null
-    _sum: ApplicationSumAggregateOutputType | null
     _min: ApplicationMinAggregateOutputType | null
     _max: ApplicationMaxAggregateOutputType | null
   }
@@ -7501,7 +7456,6 @@ export namespace Prisma {
     phoneNumber?: boolean
     linkedinProfile?: boolean
     portfolioWebsite?: boolean
-    matchScore?: boolean
     cvAnalysis?: boolean
     job?: boolean | JobDefaultArgs<ExtArgs>
     applicant?: boolean | UserDefaultArgs<ExtArgs>
@@ -7521,7 +7475,6 @@ export namespace Prisma {
     phoneNumber?: boolean
     linkedinProfile?: boolean
     portfolioWebsite?: boolean
-    matchScore?: boolean
     cvAnalysis?: boolean
     job?: boolean | JobDefaultArgs<ExtArgs>
     applicant?: boolean | UserDefaultArgs<ExtArgs>
@@ -7541,7 +7494,6 @@ export namespace Prisma {
     phoneNumber?: boolean
     linkedinProfile?: boolean
     portfolioWebsite?: boolean
-    matchScore?: boolean
     cvAnalysis?: boolean
     job?: boolean | JobDefaultArgs<ExtArgs>
     applicant?: boolean | UserDefaultArgs<ExtArgs>
@@ -7561,11 +7513,10 @@ export namespace Prisma {
     phoneNumber?: boolean
     linkedinProfile?: boolean
     portfolioWebsite?: boolean
-    matchScore?: boolean
     cvAnalysis?: boolean
   }
 
-  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "status" | "coverLetter" | "resumeUrl" | "createdAt" | "updatedAt" | "jobId" | "applicantId" | "notes" | "interviewDate" | "phoneNumber" | "linkedinProfile" | "portfolioWebsite" | "matchScore" | "cvAnalysis", ExtArgs["result"]["application"]>
+  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "status" | "coverLetter" | "resumeUrl" | "createdAt" | "updatedAt" | "jobId" | "applicantId" | "notes" | "interviewDate" | "phoneNumber" | "linkedinProfile" | "portfolioWebsite" | "cvAnalysis", ExtArgs["result"]["application"]>
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     job?: boolean | JobDefaultArgs<ExtArgs>
     applicant?: boolean | UserDefaultArgs<ExtArgs>
@@ -7599,8 +7550,7 @@ export namespace Prisma {
       phoneNumber: string | null
       linkedinProfile: string | null
       portfolioWebsite: string | null
-      matchScore: number | null
-      cvAnalysis: string | null
+      cvAnalysis: Prisma.JsonValue | null
     }, ExtArgs["result"]["application"]>
     composites: {}
   }
@@ -8039,8 +7989,7 @@ export namespace Prisma {
     readonly phoneNumber: FieldRef<"Application", 'String'>
     readonly linkedinProfile: FieldRef<"Application", 'String'>
     readonly portfolioWebsite: FieldRef<"Application", 'String'>
-    readonly matchScore: FieldRef<"Application", 'Float'>
-    readonly cvAnalysis: FieldRef<"Application", 'String'>
+    readonly cvAnalysis: FieldRef<"Application", 'Json'>
   }
     
 
@@ -8571,7 +8520,6 @@ export namespace Prisma {
     phoneNumber: 'phoneNumber',
     linkedinProfile: 'linkedinProfile',
     portfolioWebsite: 'portfolioWebsite',
-    matchScore: 'matchScore',
     cvAnalysis: 'cvAnalysis'
   };
 
@@ -9172,8 +9120,7 @@ export namespace Prisma {
     phoneNumber?: StringNullableFilter<"Application"> | string | null
     linkedinProfile?: StringNullableFilter<"Application"> | string | null
     portfolioWebsite?: StringNullableFilter<"Application"> | string | null
-    matchScore?: FloatNullableFilter<"Application"> | number | null
-    cvAnalysis?: StringNullableFilter<"Application"> | string | null
+    cvAnalysis?: JsonNullableFilter<"Application">
     job?: XOR<JobScalarRelationFilter, JobWhereInput>
     applicant?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -9192,7 +9139,6 @@ export namespace Prisma {
     phoneNumber?: SortOrderInput | SortOrder
     linkedinProfile?: SortOrderInput | SortOrder
     portfolioWebsite?: SortOrderInput | SortOrder
-    matchScore?: SortOrderInput | SortOrder
     cvAnalysis?: SortOrderInput | SortOrder
     job?: JobOrderByWithRelationInput
     applicant?: UserOrderByWithRelationInput
@@ -9216,8 +9162,7 @@ export namespace Prisma {
     phoneNumber?: StringNullableFilter<"Application"> | string | null
     linkedinProfile?: StringNullableFilter<"Application"> | string | null
     portfolioWebsite?: StringNullableFilter<"Application"> | string | null
-    matchScore?: FloatNullableFilter<"Application"> | number | null
-    cvAnalysis?: StringNullableFilter<"Application"> | string | null
+    cvAnalysis?: JsonNullableFilter<"Application">
     job?: XOR<JobScalarRelationFilter, JobWhereInput>
     applicant?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "jobId_applicantId">
@@ -9236,13 +9181,10 @@ export namespace Prisma {
     phoneNumber?: SortOrderInput | SortOrder
     linkedinProfile?: SortOrderInput | SortOrder
     portfolioWebsite?: SortOrderInput | SortOrder
-    matchScore?: SortOrderInput | SortOrder
     cvAnalysis?: SortOrderInput | SortOrder
     _count?: ApplicationCountOrderByAggregateInput
-    _avg?: ApplicationAvgOrderByAggregateInput
     _max?: ApplicationMaxOrderByAggregateInput
     _min?: ApplicationMinOrderByAggregateInput
-    _sum?: ApplicationSumOrderByAggregateInput
   }
 
   export type ApplicationScalarWhereWithAggregatesInput = {
@@ -9262,8 +9204,7 @@ export namespace Prisma {
     phoneNumber?: StringNullableWithAggregatesFilter<"Application"> | string | null
     linkedinProfile?: StringNullableWithAggregatesFilter<"Application"> | string | null
     portfolioWebsite?: StringNullableWithAggregatesFilter<"Application"> | string | null
-    matchScore?: FloatNullableWithAggregatesFilter<"Application"> | number | null
-    cvAnalysis?: StringNullableWithAggregatesFilter<"Application"> | string | null
+    cvAnalysis?: JsonNullableWithAggregatesFilter<"Application">
   }
 
   export type UserCreateInput = {
@@ -9806,8 +9747,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     linkedinProfile?: string | null
     portfolioWebsite?: string | null
-    matchScore?: number | null
-    cvAnalysis?: string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
     job: JobCreateNestedOneWithoutApplicationsInput
     applicant: UserCreateNestedOneWithoutApplicationsInput
   }
@@ -9826,8 +9766,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     linkedinProfile?: string | null
     portfolioWebsite?: string | null
-    matchScore?: number | null
-    cvAnalysis?: string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ApplicationUpdateInput = {
@@ -9842,8 +9781,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioWebsite?: NullableStringFieldUpdateOperationsInput | string | null
-    matchScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    cvAnalysis?: NullableStringFieldUpdateOperationsInput | string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
     job?: JobUpdateOneRequiredWithoutApplicationsNestedInput
     applicant?: UserUpdateOneRequiredWithoutApplicationsNestedInput
   }
@@ -9862,8 +9800,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioWebsite?: NullableStringFieldUpdateOperationsInput | string | null
-    matchScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    cvAnalysis?: NullableStringFieldUpdateOperationsInput | string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ApplicationCreateManyInput = {
@@ -9880,8 +9817,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     linkedinProfile?: string | null
     portfolioWebsite?: string | null
-    matchScore?: number | null
-    cvAnalysis?: string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ApplicationUpdateManyMutationInput = {
@@ -9896,8 +9832,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioWebsite?: NullableStringFieldUpdateOperationsInput | string | null
-    matchScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    cvAnalysis?: NullableStringFieldUpdateOperationsInput | string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ApplicationUncheckedUpdateManyInput = {
@@ -9914,8 +9849,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioWebsite?: NullableStringFieldUpdateOperationsInput | string | null
-    matchScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    cvAnalysis?: NullableStringFieldUpdateOperationsInput | string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -10408,17 +10342,6 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type JobScalarRelationFilter = {
     is?: JobWhereInput
     isNot?: JobWhereInput
@@ -10443,12 +10366,7 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     linkedinProfile?: SortOrder
     portfolioWebsite?: SortOrder
-    matchScore?: SortOrder
     cvAnalysis?: SortOrder
-  }
-
-  export type ApplicationAvgOrderByAggregateInput = {
-    matchScore?: SortOrder
   }
 
   export type ApplicationMaxOrderByAggregateInput = {
@@ -10465,8 +10383,6 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     linkedinProfile?: SortOrder
     portfolioWebsite?: SortOrder
-    matchScore?: SortOrder
-    cvAnalysis?: SortOrder
   }
 
   export type ApplicationMinOrderByAggregateInput = {
@@ -10483,28 +10399,6 @@ export namespace Prisma {
     phoneNumber?: SortOrder
     linkedinProfile?: SortOrder
     portfolioWebsite?: SortOrder
-    matchScore?: SortOrder
-    cvAnalysis?: SortOrder
-  }
-
-  export type ApplicationSumOrderByAggregateInput = {
-    matchScore?: SortOrder
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type SessionCreateNestedManyWithoutUserInput = {
@@ -10808,14 +10702,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type JobUpdateOneRequiredWithoutApplicationsNestedInput = {
     create?: XOR<JobCreateWithoutApplicationsInput, JobUncheckedCreateWithoutApplicationsInput>
     connectOrCreate?: JobCreateOrConnectWithoutApplicationsInput
@@ -11029,33 +10915,6 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
   export type SessionCreateWithoutUserInput = {
     id: string
     expiresAt: Date | string
@@ -11202,8 +11061,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     linkedinProfile?: string | null
     portfolioWebsite?: string | null
-    matchScore?: number | null
-    cvAnalysis?: string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
     job: JobCreateNestedOneWithoutApplicationsInput
   }
 
@@ -11220,8 +11078,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     linkedinProfile?: string | null
     portfolioWebsite?: string | null
-    matchScore?: number | null
-    cvAnalysis?: string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ApplicationCreateOrConnectWithoutApplicantInput = {
@@ -11378,8 +11235,7 @@ export namespace Prisma {
     phoneNumber?: StringNullableFilter<"Application"> | string | null
     linkedinProfile?: StringNullableFilter<"Application"> | string | null
     portfolioWebsite?: StringNullableFilter<"Application"> | string | null
-    matchScore?: FloatNullableFilter<"Application"> | number | null
-    cvAnalysis?: StringNullableFilter<"Application"> | string | null
+    cvAnalysis?: JsonNullableFilter<"Application">
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -11561,8 +11417,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     linkedinProfile?: string | null
     portfolioWebsite?: string | null
-    matchScore?: number | null
-    cvAnalysis?: string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
     applicant: UserCreateNestedOneWithoutApplicationsInput
   }
 
@@ -11579,8 +11434,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     linkedinProfile?: string | null
     portfolioWebsite?: string | null
-    matchScore?: number | null
-    cvAnalysis?: string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ApplicationCreateOrConnectWithoutJobInput = {
@@ -11902,8 +11756,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     linkedinProfile?: string | null
     portfolioWebsite?: string | null
-    matchScore?: number | null
-    cvAnalysis?: string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -12073,8 +11926,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioWebsite?: NullableStringFieldUpdateOperationsInput | string | null
-    matchScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    cvAnalysis?: NullableStringFieldUpdateOperationsInput | string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
     job?: JobUpdateOneRequiredWithoutApplicationsNestedInput
   }
 
@@ -12091,8 +11943,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioWebsite?: NullableStringFieldUpdateOperationsInput | string | null
-    matchScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    cvAnalysis?: NullableStringFieldUpdateOperationsInput | string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ApplicationUncheckedUpdateManyWithoutApplicantInput = {
@@ -12108,8 +11959,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioWebsite?: NullableStringFieldUpdateOperationsInput | string | null
-    matchScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    cvAnalysis?: NullableStringFieldUpdateOperationsInput | string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ApplicationCreateManyJobInput = {
@@ -12125,8 +11975,7 @@ export namespace Prisma {
     phoneNumber?: string | null
     linkedinProfile?: string | null
     portfolioWebsite?: string | null
-    matchScore?: number | null
-    cvAnalysis?: string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ApplicationUpdateWithoutJobInput = {
@@ -12141,8 +11990,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioWebsite?: NullableStringFieldUpdateOperationsInput | string | null
-    matchScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    cvAnalysis?: NullableStringFieldUpdateOperationsInput | string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
     applicant?: UserUpdateOneRequiredWithoutApplicationsNestedInput
   }
 
@@ -12159,8 +12007,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioWebsite?: NullableStringFieldUpdateOperationsInput | string | null
-    matchScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    cvAnalysis?: NullableStringFieldUpdateOperationsInput | string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type ApplicationUncheckedUpdateManyWithoutJobInput = {
@@ -12176,8 +12023,7 @@ export namespace Prisma {
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     linkedinProfile?: NullableStringFieldUpdateOperationsInput | string | null
     portfolioWebsite?: NullableStringFieldUpdateOperationsInput | string | null
-    matchScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    cvAnalysis?: NullableStringFieldUpdateOperationsInput | string | null
+    cvAnalysis?: NullableJsonNullValueInput | InputJsonValue
   }
 
 

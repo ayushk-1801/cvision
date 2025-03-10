@@ -125,8 +125,7 @@ model Application {
   phoneNumber      String?
   linkedinProfile  String?
   portfolioWebsite String?
-  matchScore       Float? // Score from CV analysis
-  cvAnalysis       String? // Results from CV analysis
+  cvAnalysis       Json? // Results from CV analysis
 
   @@unique([jobId, applicantId]) // Prevent duplicate applications
   @@map("application")

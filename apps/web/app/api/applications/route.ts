@@ -3,6 +3,8 @@ import { prisma } from "@repo/database";
 import { uploadFile } from "@/lib/storage";
 import { getSession } from "@/server/users";
 import fs from 'fs/promises';
+import os from 'os';
+import path from 'path';
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,16 +26,12 @@ export async function POST(req: NextRequest) {
     const phoneNumber = formData.get("phoneNumber") as string;
     const linkedinProfile = formData.get("linkedinProfile") as string | null;
     const portfolioWebsite = formData.get("portfolioWebsite") as string | null;
-    const cvAnalysisResultsJson = formData.get("cvAnalysisResults") as string | null;
-    const matchScore = formData.get("matchScore") ? parseFloat(formData.get("matchScore") as string) : null;
     
-    // Get the CV analysis text which is in the cvAnalysis field
-    const cvAnalysis = formData.get("cvAnalysis") as string | null;
-    
-    console.log("Received application with analysis:", {
-      cvAnalysis,
-      matchScore
-    });
+    // Get job details passed from the client
+    const jobTitle = formData.get("jobTitle") as string;
+    const jobDescription = formData.get("jobDescription") as string;
+    const yearsOfExperience = Number(formData.get("yearsOfExperience") || 0);
+    const shortlistSize = Number(formData.get("shortlistSize") || 5);
 
     if (!jobId || !resume) {
       return NextResponse.json(
@@ -45,26 +43,103 @@ export async function POST(req: NextRequest) {
     // Upload resume to storage service
     const resumeUrl = await uploadFile(resume, `applications/${userId}/${jobId}/${Date.now()}`);
 
-    // Parse CV analysis results if available
-    let cvAnalysisResults = null;
-    if (cvAnalysisResultsJson) {
-      try {
-        cvAnalysisResults = JSON.parse(cvAnalysisResultsJson);
-      } catch (error) {
-        console.error("Failed to parse CV analysis results:", error);
+    // Perform resume analysis
+    let cvAnalysis = null;
+    try {
+      console.log("🔍 Starting server-side resume analysis...");
+      
+      // Save file to temp storage to send to API
+      const tempDir = os.tmpdir();
+      const fileExtension = resume.name.split('.').pop();
+      const tempFilePath = path.join(tempDir, `resume-${Date.now()}.${fileExtension}`);
+      
+      // Convert File to buffer and save
+      const buffer = Buffer.from(await resume.arrayBuffer());
+      await fs.writeFile(tempFilePath, buffer);
+      
+      console.log(`📄 Resume saved to temp location: ${tempFilePath}`);
+      
+      // Create FormData for CV analysis API
+      const apiFormData = new FormData();
+      const resumeFile = new File([buffer], resume.name, { type: resume.type });
+      
+      apiFormData.append("resume_file", resumeFile);
+      apiFormData.append("job_title", jobTitle);
+      apiFormData.append("job_description", jobDescription);
+      apiFormData.append("application_id", "temp-id");
+      apiFormData.append("job_id", jobId);
+      apiFormData.append("n_years", String(yearsOfExperience));
+      apiFormData.append("N", String(shortlistSize));
+
+      console.log("📤 Sending to CV analysis API:", {
+        job_title: jobTitle,
+        job_description: jobDescription?.substring(0, 50) + "...",
+        job_id: jobId,
+        n_years: yearsOfExperience,
+        N: shortlistSize,
+      });
+
+      const apiUrl = process.env.NEXT_PUBLIC_CV_API_URL || "http://localhost:8000";
+      const endpoint = `${apiUrl}/submit_application/`;
+      console.log("🚀 Sending request to:", endpoint);
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: apiFormData,
+      });
+
+      // Clean up temp file
+      await fs.unlink(tempFilePath).catch(err => {
+        console.warn("Failed to clean up temp file:", err);
+      });
+
+      console.log("📥 Received CV API response with status:", response.status);
+      
+      if (!response.ok) {
+        throw new Error(`CV analysis failed! Status: ${response.status}`);
       }
+
+      const result = await response.json();
+      console.log("✅ CV Analysis Result:", result);
+      
+      // Create a properly structured cvAnalysis object
+      if (result) {
+        cvAnalysis = {
+          similarity: result.similarity || 0,
+          reason: result.reason || "No reason provided",
+          projects: result.projects || "",
+          n_years: result.n_years || 0,
+          skills: result.skills || ""
+        };
+        
+        console.log("✅ Structured CV analysis:", {
+          similarity: cvAnalysis.similarity,
+          reason: cvAnalysis.reason.substring(0, 50) + "...",
+          n_years: cvAnalysis.n_years,
+          hasSkills: !!cvAnalysis.skills,
+          hasProjects: !!cvAnalysis.projects
+        });
+      }
+    } catch (err) {
+      console.error("Error during CV analysis:", err);
+      // Create a default object when analysis fails
+      cvAnalysis = {
+        similarity: 0,
+        reason: "CV analysis failed. Please try again later.",
+        projects: "",
+        n_years: 0,
+        skills: ""
+      };
     }
 
-    // Create notes field that includes all the information we want to store
+    // Create notes field with additional information
     const notes = JSON.stringify({
       phoneNumber: phoneNumber || null,
       linkedinProfile: linkedinProfile || null,
       portfolioWebsite: portfolioWebsite || null,
-      cvAnalysis: cvAnalysis || null,
-      cvAnalysisResults: cvAnalysisResults || null,
     });
 
-    // Create the application - include the CV analysis data
+    // Create the application with the cvAnalysis
     const application = await prisma.application.create({
       data: {
         jobId,
@@ -74,14 +149,13 @@ export async function POST(req: NextRequest) {
         phoneNumber,
         linkedinProfile,
         portfolioWebsite,
-        cvAnalysis,  // Include cv analysis directly if the field exists in schema
-        notes,
-        ...(typeof matchScore === 'number' ? { matchScore } : {}),
+        cvAnalysis,  // Store the object directly as Json
+        notes
       },
     });
 
-    // Update the job with applicant information if CV analysis provided data
-    if (cvAnalysisResults || cvAnalysis) {
+    // Update the job with applicant information
+    if (cvAnalysis) {
       // Get existing job data
       const existingJob = await prisma.job.findUnique({ 
         where: { id: jobId },
@@ -92,13 +166,17 @@ export async function POST(req: NextRequest) {
       const updatedApplicants = {
         ...(existingJob?.applicants as object || {}),
         [userId]: {
-          similarity: matchScore,
-          reason: cvAnalysis,  // Store the analysis text
           applicationId: application.id,
+          // Use the exact same fields as in cvAnalysis
+          similarity: cvAnalysis.similarity,
+          reason: cvAnalysis.reason,
+          skills: cvAnalysis.skills,
+          projects: cvAnalysis.projects,
+          n_years: cvAnalysis.n_years,
+          // Additional contact info
           phoneNumber,
           linkedinProfile,
-          portfolioWebsite,
-          ...cvAnalysisResults
+          portfolioWebsite
         }
       };
       
@@ -123,7 +201,7 @@ export async function POST(req: NextRequest) {
     }
     
     return NextResponse.json(
-      { error: "Failed to submit application" },
+      { error: "Failed to submit application", details: error.message },
       { status: 500 }
     );
   }
