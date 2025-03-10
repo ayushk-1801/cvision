@@ -171,11 +171,11 @@ export default function ShortlistedApplicantsPage({ params }: { params: { id: st
   };
 
   const getMatchScoreColor = (score: number | null) => {
-    if (score === null) return "bg-gray-100 text-gray-800";
+    if (score === null) return "bg-gray-100 text-gray-800 hover:text-gray-900 hover:bg-gray-200";
     
-    if (score >= 0.8) return "bg-green-100 text-green-800";
-    if (score >= 0.5) return "bg-yellow-100 text-yellow-800";
-    return "bg-red-100 text-red-800";
+    if (score >= 0.8) return "bg-green-100 text-green-800 hover:text-green-900 hover:bg-green-200";
+    if (score >= 0.5) return "bg-yellow-100 text-yellow-800 hover:text-yellow-900 hover:bg-yellow-200";
+    return "bg-red-100 text-red-800 hover:text-red-900 hover:bg-red-200";
   };
   
   const formatSkills = (skills: string) => {

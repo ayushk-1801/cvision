@@ -1,13 +1,22 @@
+"use client";
+
 import HomeNavbar from "@/components/Home-Navbar";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, FileText, Search, Users } from "lucide-react";
 import Image from "next/image";
+import useRouter from "next/navigation";
 
 export default async function IndexPage() {
+  const handleRecruiterClick = () => {
+    window.location.href = "http://localhost:3000/signup";
+  };
+
+  const handleCandidateClick = () => {
+    window.location.href = "http://localhost:3001/signup";
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
-      <HomeNavbar />
-
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-blue-600 to-indigo-700 py-20 px-4 sm:px-6 lg:px-8 text-white">
         <div className="max-w-7xl mx-auto">
@@ -21,12 +30,16 @@ export default async function IndexPage() {
                 CV analysis and candidate matching platform.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="bg-white text-blue-700 hover:bg-blue-50 text-lg px-6 py-6">
+                <Button
+                  className="bg-white text-blue-700 hover:bg-blue-50 text-lg px-6 py-6"
+                  onClick={handleRecruiterClick}
+                >
                   For Recruiters
                 </Button>
                 <Button
                   variant="outline"
                   className="border-white text-white hover:bg-blue-600 text-lg px-6 py-6 bg-transparent hover:text-white"
+                  onClick={handleCandidateClick}
                 >
                   For Job Seekers
                 </Button>
@@ -34,7 +47,7 @@ export default async function IndexPage() {
             </div>
             <div className="relative h-[400px]">
               <Image
-                src="/hero-image.jpeg"
+                src="/logo.svg"
                 alt="CV Analysis Platform"
                 fill
                 className="object-contain"
@@ -273,12 +286,16 @@ export default async function IndexPage() {
             better matches.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-white text-blue-700 hover:bg-blue-50 text-lg px-8 py-6">
+            <Button
+              className="bg-white text-blue-700 hover:bg-blue-50 text-lg px-8 py-6"
+              onClick={handleRecruiterClick}
+            >
               For Recruiters
             </Button>
             <Button
               variant="outline"
               className="border-white text-white hover:bg-blue-600 text-lg px-8 py-6 bg-transparent hover:text-white"
+              onClick={handleCandidateClick}
             >
               For Job Seekers
             </Button>
