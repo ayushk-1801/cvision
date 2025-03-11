@@ -35,8 +35,20 @@ import {
   Phone,
   Link as LinkIcon,
   Linkedin,
+  CheckCircle,
+  AlertCircle,
 } from "lucide-react";
 import { useUser } from "@/lib/hooks/use-user";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface User {
   id: string;
@@ -89,6 +101,10 @@ export default function ShortlistedApplicantsPage({ params }: { params: { id: st
   // Filter states
   const [scoreFilter, setScoreFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  
+  // Declaration states
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
     const fetchShortlistedApplicants = async () => {
@@ -180,6 +196,35 @@ export default function ShortlistedApplicantsPage({ params }: { params: { id: st
   
   const formatSkills = (skills: string) => {
     return skills.split(',').map(skill => skill.trim()).filter(Boolean);
+  };
+
+  const declareResults = async () => {
+    try {
+      setIsSubmitting(true);
+      const response = await fetch(`/api/jobs/${params.id}/declare-results`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          shortlistedApplicantIds: applicants.map(app => app.id)
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to declare results');
+      }
+
+      const data = await response.json();
+      
+      // Redirect to the job details page
+      router.push(`/dashboard/jobs/${params.id}`);
+    } catch (err) {
+      console.error('Error declaring results:', err);
+    } finally {
+      setIsSubmitting(false);
+      setShowConfirmDialog(false);
+    }
   };
 
   // Loading and error states remain unchanged
@@ -284,8 +329,55 @@ export default function ShortlistedApplicantsPage({ params }: { params: { id: st
               </Button>
             </div>
           </div>
+
+          {/* Add Declare Result button */}
+          {applicants.length > 0 && (
+            <div className="border-t pt-4 flex justify-end">
+              <Button 
+                variant="default" 
+                onClick={() => setShowConfirmDialog(true)}
+                disabled={isSubmitting}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Declare Results
+                {isSubmitting && <span className="ml-2">...</span>}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      {/* Confirmation Dialog */}
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Declare Results</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action will update the status of all applications for this job. 
+              The {applicants.length} shortlisted applicants will be set to &quot;reviewing&quot; 
+              and all other applicants will be marked as &quot;rejected&quot;.
+              <div className="mt-2 flex items-center text-amber-600">
+                <AlertCircle className="h-4 w-4 mr-2" />
+                This action cannot be undone.
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSubmitting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                declareResults();
+              }}
+              disabled={isSubmitting}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              {isSubmitting ? "Processing..." : "Confirm & Declare Results"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {filteredApplicants.length === 0 ? (
         <div className="text-center py-12 bg-slate-50 border border-slate-100 rounded-md">

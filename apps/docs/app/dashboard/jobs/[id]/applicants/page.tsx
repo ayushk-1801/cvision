@@ -31,6 +31,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  HoverCard,
+  HoverCardTrigger,
+  HoverCardContent
+} from "@/components/ui/hover-card";
+import {
   ArrowLeft,
   Search,
   Filter,
@@ -41,6 +46,7 @@ import {
   XCircle,
   Clock,
   FileDown,
+  BarChart2,
 } from "lucide-react";
 import { useUser } from "@/lib/hooks/use-user";
 
@@ -49,6 +55,15 @@ interface User {
   name: string;
   email: string;
   image: string | null;
+}
+
+// Update interface to match actual data structure
+interface CvAnalysis {
+  reason?: string;         // Changed from matchReason
+  skills?: string;         // This is a string of skills separated by commas
+  n_years?: number;        // Number of years of experience
+  similarity?: number;          // Changed from similarityScore
+  // Add any other fields from the actual data
 }
 
 interface Application {
@@ -61,6 +76,7 @@ interface Application {
   notes: string | null;
   interviewDate: string | null;
   applicant: User;
+  cvAnalysis: CvAnalysis;  // Updated to match the data structure
 }
 
 interface JobSummary {
@@ -102,6 +118,12 @@ export default function ApplicantsPage({ params }: { params: { id: string } }) {
         
         const data = await response.json();
         setJob(data.job);
+        
+        // Debug: Log the structure of the first application to see how cvAnalysis is structured
+        if (data.applicants.length > 0) {
+          console.log('Sample applicant data:', data.applicants[0]);
+        }
+        
         setApplicants(data.applicants);
         setFilteredApplicants(data.applicants);
       } catch (err) {
@@ -154,6 +176,12 @@ export default function ApplicantsPage({ params }: { params: { id: string } }) {
       day: 'numeric',
       year: 'numeric'
     });
+  };
+
+  // Helper function to parse skills string into an array
+  const parseSkills = (skillsString?: string): string[] => {
+    if (!skillsString) return [];
+    return skillsString.split(',').map(skill => skill.trim()).filter(Boolean);
   };
 
   if (isLoading) {
@@ -249,7 +277,6 @@ export default function ApplicantsPage({ params }: { params: { id: string } }) {
                   <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="reviewing">Reviewing</SelectItem>
                   <SelectItem value="shortlisted">Shortlisted</SelectItem>
-                  <SelectItem value="interviewing">Interviewing</SelectItem>
                   <SelectItem value="accepted">Accepted</SelectItem>
                   <SelectItem value="rejected">Rejected</SelectItem>
                 </SelectContent>
@@ -288,19 +315,91 @@ export default function ApplicantsPage({ params }: { params: { id: string } }) {
                   {filteredApplicants.map((application) => (
                     <TableRow key={application.id}>
                       <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Avatar>
-                            {application.applicant.image ? (
-                              <AvatarImage src={application.applicant.image} alt={application.applicant.name} />
-                            ) : (
-                              <AvatarFallback>{application.applicant.name.charAt(0)}</AvatarFallback>
-                            )}
-                          </Avatar>
-                          <div>
-                            <div className="font-medium">{application.applicant.name}</div>
-                            <div className="text-sm text-slate-500">{application.applicant.email}</div>
-                          </div>
-                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="flex items-center gap-3 cursor-help">
+                              <Avatar>
+                                {application.applicant.image ? (
+                                  <AvatarImage src={application.applicant.image} alt={application.applicant.name} />
+                                ) : (
+                                  <AvatarFallback>{application.applicant.name.charAt(0)}</AvatarFallback>
+                                )}
+                              </Avatar>
+                              <div>
+                                <div className="font-medium">{application.applicant.name}</div>
+                                <div className="text-sm text-slate-500">{application.applicant.email}</div>
+                              </div>
+                              {application.cvAnalysis && typeof application.cvAnalysis === 'object' && application.cvAnalysis.similarity !== undefined && (
+                                <Badge variant="outline" className="ml-2 bg-blue-50">
+                                  <BarChart2 className="h-3 w-3 mr-1" />
+                                  {Math.round(application.cvAnalysis.similarity * 100)}%
+                                </Badge>
+                              )}
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-80">
+                            <div className="space-y-2">
+                              <h4 className="text-sm font-semibold">Applicant Match Details</h4>
+                              {application.cvAnalysis && typeof application.cvAnalysis === 'object' ? (
+                                <>
+                                  {application.cvAnalysis.similarity !== undefined && (
+                                    <div className="flex flex-col gap-1 mb-2">
+                                      <div className="flex items-center justify-between">
+                                        <div className="text-sm font-medium">Match score:</div>
+                                        <div className="font-semibold bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-sm">
+                                          {Math.round(application.cvAnalysis.similarity * 100)}%
+                                        </div>
+                                      </div>
+                                      <div className="w-full bg-slate-100 rounded-full h-1.5">
+                                        <div 
+                                          className="bg-blue-600 h-1.5 rounded-full" 
+                                          style={{ width: `${Math.round(application.cvAnalysis.similarity * 100)}%` }}
+                                        ></div>
+                                      </div>
+                                    </div>
+                                  )}
+                                  
+                                  {application.cvAnalysis.reason && (
+                                    <>
+                                      <Separator className="my-2" />
+                                      <div className="text-xs text-muted-foreground">
+                                        <div className="max-h-28 overflow-y-auto pr-1 custom-scrollbar">
+                                          <p className="whitespace-normal break-words">{application.cvAnalysis.reason}</p>
+                                        </div>
+                                      </div>
+                                    </>
+                                  )}
+                                  
+                                  {application.cvAnalysis.n_years !== undefined && (
+                                    <>
+                                      <Separator className="my-2" />
+                                      <div className="flex items-center text-xs">
+                                        <p className="font-medium mr-2">Experience:</p>
+                                        <p>{application.cvAnalysis.n_years} {application.cvAnalysis.n_years === 1 ? 'year' : 'years'}</p>
+                                      </div>
+                                    </>
+                                  )}
+                                  
+                                  {application.cvAnalysis.skills && (
+                                    <>
+                                      <Separator className="my-2" />
+                                      <div className="text-xs">
+                                        <p className="font-medium mb-1">Key skills:</p>
+                                        <div className="flex flex-wrap gap-1 mt-1">
+                                          {parseSkills(application.cvAnalysis.skills).map((skill, index) => (
+                                            <Badge key={index} variant="secondary" className="text-xs">{skill}</Badge>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    </>
+                                  )}
+                                </>
+                              ) : (
+                                <p className="text-sm text-slate-500">No CV analysis available</p>
+                              )}
+                            </div>
+                          </HoverCardContent>
+                        </HoverCard>
                       </TableCell>
                       <TableCell>
                         {getStatusBadge(application.status)}
