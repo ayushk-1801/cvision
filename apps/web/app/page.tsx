@@ -160,7 +160,7 @@ export default async function IndexPage() {
                   </div>
                 </li>
               </ul>
-              <Button className="mt-8 bg-blue-700 hover:bg-blue-800 w-full py-6">
+              <Button className="mt-8 bg-blue-700 hover:bg-blue-800 w-full py-6" onClick={handleRecruiterClick}>
                 Start Hiring <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </div>
@@ -212,7 +212,7 @@ export default async function IndexPage() {
                   </div>
                 </li>
               </ul>
-              <Button className="mt-8 bg-indigo-700 hover:bg-indigo-800 w-full py-6">
+              <Button className="mt-8 bg-indigo-700 hover:bg-indigo-800 w-full py-6" onClick={handleCandidateClick}>
                 Find Jobs <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </div>
