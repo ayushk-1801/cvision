@@ -8,11 +8,11 @@ import useRouter from "next/navigation";
 
 export default async function IndexPage() {
   const handleRecruiterClick = () => {
-    window.location.href = "http://localhost:3000/signup";
+    window.location.href = `${process.env.NEXT_PUBLIC_RECRUITER_URL}/signup`;
   };
 
   const handleCandidateClick = () => {
-    window.location.href = "http://localhost:3001/signup";
+    window.location.href = `${process.env.NEXT_PUBLIC_CANDIDATE_URL}/signup`;
   };
 
   return (
