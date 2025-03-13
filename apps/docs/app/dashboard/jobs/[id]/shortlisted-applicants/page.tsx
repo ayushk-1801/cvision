@@ -89,7 +89,7 @@ interface JobSummary {
   shortlistSize: number;
 }
 
-export default function ShortlistedApplicantsPage({ params }: { params: { id: string } }) {
+export default async function ShortlistedApplicantsPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { user } = useUser();
   const [isLoading, setIsLoading] = useState(true);
@@ -106,13 +106,15 @@ export default function ShortlistedApplicantsPage({ params }: { params: { id: st
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
+  const paramss = await params;
+
   useEffect(() => {
     const fetchShortlistedApplicants = async () => {
       if (!user) return;
       
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/jobs/${params.id}/applicants?shortlisted=true`);
+        const response = await fetch(`/api/jobs/${paramss.id}/applicants?shortlisted=true`);
         
         if (!response.ok) {
           if (response.status === 403) {
@@ -139,7 +141,7 @@ export default function ShortlistedApplicantsPage({ params }: { params: { id: st
     };
     
     fetchShortlistedApplicants();
-  }, [params.id, user]);
+  }, [paramss.id, user]);
 
   // Update filtered applicants when search term or score filter changes
   useEffect(() => {
@@ -201,7 +203,7 @@ export default function ShortlistedApplicantsPage({ params }: { params: { id: st
   const declareResults = async () => {
     try {
       setIsSubmitting(true);
-      const response = await fetch(`/api/jobs/${params.id}/declare-results`, {
+      const response = await fetch(`/api/jobs/${paramss.id}/declare-results`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -218,7 +220,7 @@ export default function ShortlistedApplicantsPage({ params }: { params: { id: st
       const data = await response.json();
       
       // Redirect to the job details page
-      router.push(`/dashboard/jobs/${params.id}`);
+      router.push(`/dashboard/jobs/${paramss.id}`);
     } catch (err) {
       console.error('Error declaring results:', err);
     } finally {
@@ -278,7 +280,7 @@ export default function ShortlistedApplicantsPage({ params }: { params: { id: st
   return (
     <div className="container py-10 mx-auto">
       <div className="mb-6">
-        <Button variant="ghost" size="sm" onClick={() => router.push(`/dashboard/jobs/${params.id}`)}>
+        <Button variant="ghost" size="sm" onClick={() => router.push(`/dashboard/jobs/${paramss.id}`)}>
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to job details
         </Button>

@@ -3,10 +3,10 @@ import { prisma } from "@repo/database";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const jobId = params.id;
+    const jobId = (await params).id;
 
     const job = await prisma.job.findUnique({
       where: {

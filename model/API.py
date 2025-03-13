@@ -44,7 +44,8 @@ class candidate(BaseModel):
     skills: Optional[list[str]] = Field(description="list of candidate's skills that are relevant to the job")
     projects: Optional[list[project]] = Field(description="list of projects and publications the candidate has worked on")
 
-class  JobDesctripion(BaseModel):
+class  JobDesctripion(BaseModel):class  JobDesctripion(BaseModel):
+
     """Information about the job"""
     job_title: Optional[str] = Field(description="Only the job title")
     job_description: Optional[str] = Field(description="Job description")

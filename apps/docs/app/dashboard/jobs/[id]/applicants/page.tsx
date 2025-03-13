@@ -85,7 +85,7 @@ interface JobSummary {
   company: string;
 }
 
-export default function ApplicantsPage({ params }: { params: { id: string } }) {
+export default async function ApplicantsPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { user } = useUser();
   const [isLoading, setIsLoading] = useState(true);
@@ -98,13 +98,15 @@ export default function ApplicantsPage({ params }: { params: { id: string } }) {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  const paramss = await params;
+
   useEffect(() => {
     const fetchApplicants = async () => {
       if (!user) return;
       
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/jobs/${params.id}/applicants?status=${statusFilter}`);
+        const response = await fetch(`/api/jobs/${paramss.id}/applicants?status=${statusFilter}`);
         
         if (!response.ok) {
           if (response.status === 403) {
@@ -135,7 +137,7 @@ export default function ApplicantsPage({ params }: { params: { id: string } }) {
     };
     
     fetchApplicants();
-  }, [params.id, user, statusFilter]);
+  }, [paramss.id, user, statusFilter]);
 
   // Update filtered applicants when search term changes
   useEffect(() => {
@@ -234,7 +236,7 @@ export default function ApplicantsPage({ params }: { params: { id: string } }) {
   return (
     <div className="container py-10 mx-auto">
       <div className="mb-6">
-        <Button variant="ghost" size="sm" onClick={() => router.push(`/dashboard/jobs/${params.id}`)}>
+        <Button variant="ghost" size="sm" onClick={() => router.push(`/dashboard/jobs/${paramss.id}`)}>
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to job details
         </Button>

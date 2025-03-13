@@ -49,12 +49,14 @@ const applicationSchema = z.object({
 
 type ApplicationForm = z.infer<typeof applicationSchema>;
 
-export default function ApplyJobPage({ params }: { params: { id: string } }) {
+export default async function ApplyJobPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const [job, setJob] = useState<Job | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const paramss = await params;
 
   const form = useForm<ApplicationForm>({
     resolver: zodResolver(applicationSchema),
@@ -70,7 +72,7 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
     const fetchJobDetails = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/jobs/${params.id}`);
+        const response = await fetch(`/api/jobs/${paramss.id}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch job details");
@@ -94,7 +96,7 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
     };
 
     fetchJobDetails();
-  }, [params.id]);
+  }, [paramss.id]);
 
   const onSubmit = async (data: ApplicationForm) => {
     try {
@@ -103,7 +105,7 @@ export default function ApplyJobPage({ params }: { params: { id: string } }) {
       // Create form data for file upload
       const formData = new FormData();
       formData.append("resume", data.resume);
-      formData.append("jobId", params.id);
+      formData.append("jobId", paramss.id);
 
       if (data.coverLetter) {
         formData.append("coverLetter", data.coverLetter);

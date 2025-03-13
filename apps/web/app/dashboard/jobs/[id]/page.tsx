@@ -55,17 +55,18 @@ interface Job {
   };
 }
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
+export default async function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const [job, setJob] = useState<Job | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const paramss = await params;
 
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/jobs/${params.id}`);
+        const response = await fetch(`/api/jobs/${paramss.id}`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch job details');
@@ -82,7 +83,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
     };
 
     fetchJobDetails();
-  }, [params.id]);
+  }, [paramss.id]);
 
   if (isLoading) {
     return (

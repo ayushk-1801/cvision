@@ -27,10 +27,10 @@ const jobUpdateSchema = z.object({
 // Get job details
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
-    const jobId = params.id;
+    const jobId = (await params).id;
     
     const job = await prisma.job.findUnique({
       where: { id: jobId },
@@ -71,7 +71,7 @@ export async function GET(
 // Update job
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
     const session = await getSession();
@@ -85,7 +85,7 @@ export async function PATCH(
     }
     
     const userId = session.user.id;
-    const jobId = params.id;
+    const jobId = (await params).id;
     
     // Get the job to check ownership
     const existingJob = await prisma.job.findUnique({
@@ -180,7 +180,7 @@ export async function PATCH(
 // Delete job
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
     const session = await getSession();
@@ -194,7 +194,7 @@ export async function DELETE(
     }
     
     const userId = session.user.id;
-    const jobId = params.id;
+    const jobId = (await params).id;
     
     // Get the job to check ownership
     const existingJob = await prisma.job.findUnique({

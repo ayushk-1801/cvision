@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -77,6 +77,54 @@ const statusColors: Record<string, string> = {
 };
 
 export default function ApplicationsPage() {
+  return (
+    <Suspense fallback={<ApplicationsLoading />}>
+      <ApplicationsContent />
+    </Suspense>
+  );
+}
+
+function ApplicationsLoading() {
+  return (
+    <div className="py-10 px-20">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">My Applications</h1>
+        <Skeleton className="h-10 w-28" />
+      </div>
+
+      <div className="mb-8">
+        <Skeleton className="h-10 w-full mb-4" />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {Array.from({ length: 4 }).map((_, idx) => (
+            <Card key={idx}>
+              <CardHeader>
+                <Skeleton className="h-4 w-2/3 mb-2" />
+                <Skeleton className="h-4 w-1/3" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-2 mb-4">
+                  <Skeleton className="h-6 w-20" />
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-1/2" />
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Skeleton className="h-10 w-24" />
+                <Skeleton className="h-10 w-24" />
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ApplicationsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [applications, setApplications] = useState<Application[]>([]);

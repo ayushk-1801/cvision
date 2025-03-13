@@ -149,7 +149,7 @@ export async function POST(req: NextRequest) {
         phoneNumber,
         linkedinProfile,
         portfolioWebsite,
-        cvAnalysis,  // Store the object directly as Json
+        cvAnalysis: cvAnalysis || undefined,  // Store the object directly as Json or undefined if null
         notes
       },
     });

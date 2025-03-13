@@ -4,9 +4,9 @@ import * as path from 'path';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
-  const filePath = path.join(process.cwd(), 'uploads', ...params.path);
+  const filePath = path.join(process.cwd(), 'uploads', ...(await params).path);
   
   try {
     // Check if file exists

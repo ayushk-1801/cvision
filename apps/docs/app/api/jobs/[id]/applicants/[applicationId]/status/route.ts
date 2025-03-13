@@ -17,7 +17,7 @@ const statusUpdateSchema = z.object({
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string, applicationId: string } }
+  { params }: { params: Promise<{ id: string; applicationId: string }> }
 ): Promise<NextResponse> {
   try {
     const session = await getSession();
@@ -31,8 +31,8 @@ export async function PATCH(
     }
     
     const userId = session.user.id;
-    const jobId = params.id;
-    const applicationId = params.applicationId;
+    const jobId = (await params).id;
+    const applicationId = (await params).applicationId;
     
     // First verify if the job exists and if the user is the recruiter
     const job = await prisma.job.findUnique({

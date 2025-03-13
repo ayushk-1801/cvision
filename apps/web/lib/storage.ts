@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile, mkdir, unlink } from 'fs/promises';
 import { existsSync } from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -60,7 +60,7 @@ export async function deleteFile(url: string): Promise<void> {
     
     // Check if file exists before attempting to delete
     if (existsSync(filePath)) {
-      await fs.unlink(filePath);
+      await unlink(filePath);
       console.log(`File deleted: ${filePath}`);
     }
   } catch (error) {

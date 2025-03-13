@@ -72,18 +72,20 @@ const statusColors: Record<string, string> = {
   accepted: "bg-green-100 text-green-800 border-green-200",
 };
 
-export default function ApplicationDetailPage({ params }: { params: { id: string } }) {
+export default async function ApplicationDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const [application, setApplication] = useState<Application | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [parsedNotes, setParsedNotes] = useState<any>(null);
 
+  const paramss = await params;
+
   useEffect(() => {
     const fetchApplicationDetails = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/applications/${params.id}`);
+        const response = await fetch(`/api/applications/${paramss.id}`);
         
         if (!response.ok) {
           if (response.status === 404) {
@@ -113,7 +115,7 @@ export default function ApplicationDetailPage({ params }: { params: { id: string
     };
 
     fetchApplicationDetails();
-  }, [params.id]);
+  }, [paramss.id]);
 
   if (loading) {
     return (

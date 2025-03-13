@@ -4,8 +4,8 @@ import { prisma } from '@repo/database';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }
+): Promise<NextResponse> {
   try {
     const session = await getSession();
     
@@ -13,7 +13,7 @@ export async function GET(
       return NextResponse.json({ error: "Unauthorized access" }, { status: 401 });
     }
     
-    const applicationId = params.id;
+    const applicationId = (await params).id;
     
     // Fetch the application with job details
     const application = await prisma.application.findUnique({

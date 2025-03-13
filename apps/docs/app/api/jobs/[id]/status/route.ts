@@ -4,7 +4,7 @@ import { getSession } from '@/server/users';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
     const session = await getSession();
@@ -18,7 +18,7 @@ export async function PATCH(
     }
     
     const userId = session.user.id;
-    const jobId = params.id;
+    const jobId = (await params) .id;
     
     // Get the request body
     const { isActive } = await request.json();

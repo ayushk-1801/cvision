@@ -18,14 +18,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { format } from 'date-fns'
 
 interface JobEditPageProps {
-  params: {
-    id: string
-  }
+  params: Promise<{ id: string }>
 }
 
-export default function JobEditPage({ params }: JobEditPageProps) {
+export default async function JobEditPage({ params }: JobEditPageProps) {
+  const paramss = await params;
   const router = useRouter()
-  const jobId = params.id
+  const jobId = paramss.id
   const [isLoading, setIsLoading] = useState(false)
   const [isFetching, setIsFetching] = useState(true)
   const [error, setError] = useState('')

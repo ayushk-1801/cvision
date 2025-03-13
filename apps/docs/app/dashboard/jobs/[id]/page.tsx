@@ -61,7 +61,7 @@ interface Job {
   shortlistSize: number | null;
 }
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
+export default async function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { user } = useUser();
   const [job, setJob] = useState<Job | null>(null);
@@ -70,11 +70,13 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
   const [isRecruiter, setIsRecruiter] = useState<boolean>(false);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
+  const paramss = await params;
+
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`/api/jobs/${params.id}`);
+        const response = await fetch(`/api/jobs/${paramss.id}`);
         
         if (!response.ok) {
           throw new Error('Failed to fetch job details');
@@ -98,7 +100,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
     if (user) {
       fetchJobDetails();
     }
-  }, [params.id, user]);
+  }, [paramss.id, user]);
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return 'Not specified';

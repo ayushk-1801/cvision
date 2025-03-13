@@ -27,6 +27,9 @@ interface Job {
   industry: string | null;
   jobType: string | null;
   experienceLevel: string | null;
+  applicationDeadline: string;
+  isActive: boolean;
+  recruiterId: string;
   _count: {
     applications: number;
   };
