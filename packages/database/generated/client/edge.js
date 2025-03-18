@@ -244,7 +244,7 @@ const config = {
   },
   "relativeEnvPaths": {
     "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "schemaEnvPath": "../../../../apps/docs/.env"
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.4.1",

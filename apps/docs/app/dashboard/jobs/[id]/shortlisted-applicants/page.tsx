@@ -45,10 +45,10 @@ interface JobSummary {
   shortlistSize: number;
 }
 
-export default async function ShortlistedApplicantsPage({ params }: { params: { id: string } }) {
+export default async function ShortlistedApplicantsPage({ params }: { params: Promise<{ id: string }> }) {
   const cookieStore = cookies();
   const cookieString = await cookieStore.toString();
-  const jobId = params.id;
+  const jobId = (await params).id;
   
   // Fetch data server-side
   let job: JobSummary | null = null;

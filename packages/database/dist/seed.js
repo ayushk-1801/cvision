@@ -5819,7 +5819,7 @@ var require_client = __commonJS({
       },
       "relativeEnvPaths": {
         "rootEnvPath": null,
-        "schemaEnvPath": "../../.env"
+        "schemaEnvPath": "../../../../apps/docs/.env"
       },
       "relativePath": "../../prisma",
       "clientVersion": "6.4.1",
@@ -5977,8 +5977,8 @@ model Application {
     config2.dirname = __dirname;
     if (!fs2.existsSync(path.join(__dirname, "schema.prisma"))) {
       const alternativePaths = [
-        "generated/client",
-        "client"
+        "../../packages/database/generated/client",
+        "../packages/database/generated/client"
       ];
       const alternativePath = alternativePaths.find((altPath) => {
         return fs2.existsSync(path.join(process.cwd(), altPath, "schema.prisma"));
@@ -5999,9 +5999,9 @@ model Application {
     exports2.PrismaClient = PrismaClient2;
     Object.assign(exports2, Prisma);
     path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
-    path.join(process.cwd(), "generated/client/libquery_engine-debian-openssl-3.0.x.so.node");
+    path.join(process.cwd(), "../../packages/database/generated/client/libquery_engine-debian-openssl-3.0.x.so.node");
     path.join(__dirname, "schema.prisma");
-    path.join(process.cwd(), "generated/client/schema.prisma");
+    path.join(process.cwd(), "../../packages/database/generated/client/schema.prisma");
   }
 });
 

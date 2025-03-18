@@ -4,7 +4,7 @@ import { getSession } from '@/server/users';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }  // Fix: Changed from Promise<{id: string}> to {id: string}
+  { params }: { params: Promise<{ id: string }> }  // Fix: Changed from Promise<{id: string}> to {id: string}
 ): Promise<NextResponse> {
   try {
     const session = await getSession();
@@ -17,7 +17,7 @@ export async function GET(
     }
     
     const userId = session.user.id;
-    const jobId = params.id;  // Fix: Removed the await
+    const jobId = (await params).id;  // Fix: Corrected to await params.id
     
     // First verify if the user is the recruiter for this job
     const job = await prisma.job.findUnique({
