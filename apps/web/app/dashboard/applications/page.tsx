@@ -27,8 +27,17 @@ import {
   Globe,
   XCircle,
   AlertCircle,
+  ChevronDown,
+  Filter,
 } from "lucide-react";
 import { formatDistance } from "date-fns";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Application {
   id: string;
@@ -86,14 +95,19 @@ export default function ApplicationsPage() {
 
 function ApplicationsLoading() {
   return (
-    <div className="py-10 px-20">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">My Applications</h1>
+    <div className="py-6 md:py-10 px-4 md:px-20">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold">My Applications</h1>
         <Skeleton className="h-10 w-28" />
       </div>
 
-      <div className="mb-8">
-        <Skeleton className="h-10 w-full mb-4" />
+      <div className="mb-6 md:mb-8">
+        <div className="block sm:hidden mb-4">
+          <Skeleton className="h-10 w-full" />
+        </div>
+        <div className="hidden sm:block mb-4">
+          <Skeleton className="h-10 w-full" />
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, idx) => (
@@ -215,213 +229,253 @@ function ApplicationsContent() {
   );
 
   return (
-    <div className="py-10 px-20">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">My Applications</h1>
+    <div className="py-6 md:py-10 px-4 md:px-20">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 md:mb-8">
+        <h1 className="text-2xl md:text-3xl font-bold">My Applications</h1>
         <Link href="/dashboard/jobs">
           <Button>Browse Jobs</Button>
         </Link>
       </div>
+      
+      {/* Mobile Filter Dropdown */}
+      <div className="block sm:hidden mb-6">
+        <div className="flex items-center mb-2 text-sm font-medium">
+          <Filter className="mr-2 h-4 w-4" />
+          Filter by status
+        </div>
+        <Select
+          value={currentStatus}
+          onValueChange={handleStatusChange}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Filter by status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">
+              All ({applications.length || 0})
+            </SelectItem>
+            <SelectItem value="pending">
+              Pending ({statusCounts.pending || 0})
+            </SelectItem>
+            <SelectItem value="reviewing">
+              Under Review ({statusCounts.reviewing || 0})
+            </SelectItem>
+            <SelectItem value="accepted">
+              Accepted ({statusCounts.accepted || 0})
+            </SelectItem>
+            <SelectItem value="rejected">
+              Rejected ({statusCounts.rejected || 0})
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
-      <Tabs
-        defaultValue={currentStatus}
-        className="mb-8"
-        onValueChange={handleStatusChange}
-      >
-        <TabsList className="grid grid-cols-5 mb-4 w-full md:w-auto">
-          <TabsTrigger value="all">
-            All
-            <Badge variant="secondary" className="ml-2">
-              {applications.length || 0}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="pending">
-            Pending
-            <Badge variant="secondary" className="ml-2">
-              {statusCounts.pending || 0}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="reviewing">
-            Reviewing
-            <Badge variant="secondary" className="ml-2">
-              {statusCounts.reviewing || 0}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="accepted">
-            Accepted
-            <Badge variant="secondary" className="ml-2">
-              {statusCounts.accepted || 0}
-            </Badge>
-          </TabsTrigger>
-          <TabsTrigger value="rejected">
-            Rejected
-            <Badge variant="secondary" className="ml-2">
-              {statusCounts.rejected || 0}
-            </Badge>
-          </TabsTrigger>
-        </TabsList>
+      {/* Desktop Tabs - Hidden on Mobile */}
+      <div className="hidden sm:block mb-6 md:mb-8">
+        <Tabs
+          value={currentStatus}
+          onValueChange={handleStatusChange}
+        >
+          <TabsList className="grid grid-cols-5 mb-4 w-full">
+            <TabsTrigger value="all">
+              All
+              <Badge variant="secondary" className="ml-2">
+                {applications.length || 0}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="pending">
+              Pending
+              <Badge variant="secondary" className="ml-2">
+                {statusCounts.pending || 0}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="reviewing">
+              Reviewing
+              <Badge variant="secondary" className="ml-2">
+                {statusCounts.reviewing || 0}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="accepted">
+              Accepted
+              <Badge variant="secondary" className="ml-2">
+                {statusCounts.accepted || 0}
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="rejected">
+              Rejected
+              <Badge variant="secondary" className="ml-2">
+                {statusCounts.rejected || 0}
+              </Badge>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
 
-        <TabsContent value={currentStatus} className="mt-0">
-          {loading ? (
+      {/* Application Content */}
+      <div>
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Array.from({ length: 4 }).map((_, idx) => (
+              <div key={idx}>{renderSkeletonCard()}</div>
+            ))}
+          </div>
+        ) : error ? (
+          <Card className="bg-red-50 border-red-200">
+            <CardContent className="pt-6">
+              <p className="text-red-700">{error}</p>
+            </CardContent>
+          </Card>
+        ) : applications.length > 0 ? (
+          <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Array.from({ length: 4 }).map((_, idx) => (
-                <div key={idx}>{renderSkeletonCard()}</div>
-              ))}
-            </div>
-          ) : error ? (
-            <Card className="bg-red-50 border-red-200">
-              <CardContent className="pt-6">
-                <p className="text-red-700">{error}</p>
-              </CardContent>
-            </Card>
-          ) : applications.length > 0 ? (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {applications.map((application) => (
-                  <Card
-                    key={application.id}
-                    className="transition-all duration-200 hover:shadow-md"
-                  >
-                    <CardHeader>
-                      <CardTitle className="line-clamp-1">
-                        {application.job.title}
-                      </CardTitle>
-                      <CardDescription className="flex items-center gap-1">
-                        <Building className="h-3 w-3" />
-                        {application.job.company}
-                      </CardDescription>
-                    </CardHeader>
+              {applications.map((application) => (
+                <Card
+                  key={application.id}
+                  className="transition-all duration-200 hover:shadow-md"
+                >
+                  <CardHeader>
+                    <CardTitle className="line-clamp-1">
+                      {application.job.title}
+                    </CardTitle>
+                    <CardDescription className="flex items-center gap-1">
+                      <Building className="h-3 w-3" />
+                      {application.job.company}
+                    </CardDescription>
+                  </CardHeader>
 
-                    <CardContent>
-                      <div className="flex items-center gap-2 mb-4">
-                        <Badge
-                          className={`${statusColors[application.status]} flex items-center gap-1.5 py-1.5`}
-                          variant="outline"
-                        >
-                          {statusEmojis[application.status]}
-                          {statusLabels[application.status]}
-                        </Badge>
+                  <CardContent>
+                    <div className="flex flex-wrap items-center gap-2 mb-4">
+                      <Badge
+                        className={`${statusColors[application.status]} flex items-center gap-1.5 py-1.5`}
+                        variant="outline"
+                      >
+                        {statusEmojis[application.status]}
+                        {statusLabels[application.status]}
+                      </Badge>
 
-                        <span className="text-xs text-muted-foreground">
-                          Applied{" "}
-                          {formatDistance(
-                            new Date(application.createdAt),
-                            new Date(),
-                            { addSuffix: true }
-                          )}
+                      <span className="text-xs text-muted-foreground">
+                        Applied{" "}
+                        {formatDistance(
+                          new Date(application.createdAt),
+                          new Date(),
+                          { addSuffix: true }
+                        )}
+                      </span>
+                    </div>
+
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Globe className="h-4 w-4 text-muted-foreground" />
+                        <span>
+                          {application.job.location}
+                          {application.job.isRemote && " · Remote"}
                         </span>
                       </div>
 
-                      <div className="space-y-2 text-sm">
+                      {application.job.jobType && (
                         <div className="flex items-center gap-2">
-                          <Globe className="h-4 w-4 text-muted-foreground" />
-                          <span>
-                            {application.job.location}
-                            {application.job.isRemote && " · Remote"}
-                          </span>
+                          <Briefcase className="h-4 w-4 text-muted-foreground" />
+                          <span>{application.job.jobType}</span>
                         </div>
-
-                        {application.job.jobType && (
-                          <div className="flex items-center gap-2">
-                            <Briefcase className="h-4 w-4 text-muted-foreground" />
-                            <span>{application.job.jobType}</span>
-                          </div>
-                        )}
-
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          <span>
-                            Applied on{" "}
-                            {new Date(
-                              application.createdAt
-                            ).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-
-                    <CardFooter className="flex gap-2 justify-between">
-                      {application.resumeUrl && (
-                        <Button variant="outline" size="sm" asChild>
-                          <Link href={application.resumeUrl} target="_blank">
-                            <Download className="h-4 w-4 mr-1" />
-                            Resume
-                          </Link>
-                        </Button>
                       )}
 
-                      <Button variant="outline" size="sm" asChild>
-                        <Link
-                          href={`/dashboard/applications/${application.id}`}
-                        >
-                          View Details
-                          <ExternalLink className="h-4 w-4 ml-1" />
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <span>
+                          Applied on{" "}
+                          {new Date(
+                            application.createdAt
+                          ).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+
+                  <CardFooter className="flex flex-wrap gap-2 justify-between">
+                    {application.resumeUrl && (
+                      <Button variant="outline" size="sm" asChild className="flex-1 sm:flex-none">
+                        <Link href={application.resumeUrl} target="_blank">
+                          <Download className="h-4 w-4 mr-1" />
+                          <span className="hidden sm:inline">Resume</span>
+                          <span className="inline sm:hidden">CV</span>
                         </Link>
                       </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
+                    )}
 
-              {/* Pagination */}
-              {pagination && pagination.totalPages > 1 && (
-                <div className="flex justify-center mt-8">
-                  <div className="flex gap-1">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={!pagination.hasPrevPage}
-                    >
-                      Previous
-                    </Button>
-
-                    {Array.from(
-                      { length: pagination.totalPages },
-                      (_, i) => i + 1
-                    ).map((page) => (
-                      <Button
-                        key={page}
-                        variant={page === currentPage ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handlePageChange(page)}
+                    <Button variant="outline" size="sm" asChild className="flex-1 sm:flex-none">
+                      <Link
+                        href={`/dashboard/applications/${application.id}`}
                       >
-                        {page}
-                      </Button>
-                    ))}
-
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={!pagination.hasNextPage}
-                    >
-                      Next
+                        <span className="hidden sm:inline">View Details</span>
+                        <span className="inline sm:hidden">Details</span>
+                        <ExternalLink className="h-4 w-4 ml-1" />
+                      </Link>
                     </Button>
-                  </div>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {pagination && pagination.totalPages > 1 && (
+              <div className="flex justify-center mt-6 md:mt-8">
+                <div className="flex flex-wrap gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={!pagination.hasPrevPage}
+                  >
+                    Previous
+                  </Button>
+
+                  {Array.from(
+                    { length: pagination.totalPages },
+                    (_, i) => i + 1
+                  ).map((page) => (
+                    <Button
+                      key={page}
+                      variant={page === currentPage ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handlePageChange(page)}
+                      className={page > 3 && pagination.totalPages > 5 && page < pagination.totalPages ? 
+                        "hidden sm:inline-flex" : ""}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={!pagination.hasNextPage}
+                  >
+                    Next
+                  </Button>
                 </div>
-              )}
-            </>
-          ) : (
-            <Card className="bg-gray-50 border-gray-200">
-              <CardContent className="pt-6 text-center">
-                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">
-                  No applications found
-                </h3>
-                <p className="text-muted-foreground mb-4">
-                  {currentStatus === "all"
-                    ? "You haven't applied to any jobs yet."
-                    : `You don't have any applications with "${currentStatus}" status.`}
-                </p>
-                <Button asChild>
-                  <Link href="/dashboard/jobs">Browse Jobs</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
-      </Tabs>
+              </div>
+            )}
+          </>
+        ) : (
+          <Card className="bg-gray-50 border-gray-200">
+            <CardContent className="pt-6 text-center">
+              <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">
+                No applications found
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {currentStatus === "all"
+                  ? "You haven't applied to any jobs yet."
+                  : `You don't have any applications with "${currentStatus}" status.`}
+              </p>
+              <Button asChild>
+                <Link href="/dashboard/jobs">Browse Jobs</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }
