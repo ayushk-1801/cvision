@@ -122,7 +122,7 @@ export default function JobsPage() {
   // If user data is still loading, show a loading state
   if (userLoading) {
     return (
-      <div className="container py-10 mx-auto">
+      <div className="container py-6 md:py-10 px-4 sm:px-6 lg:px-8 mx-auto">
         <div className="space-y-4">
           <Skeleton className="h-12 w-1/3" />
           <Skeleton className="h-4 w-1/4" />
@@ -133,16 +133,16 @@ export default function JobsPage() {
   }
 
   return (
-    <div className="container py-10 mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+    <div className="container py-6 md:py-10 px-4 sm:px-6 lg:px-8 mx-auto">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 md:mb-8">
         <div>
-          <h1 className="text-3xl font-bold mb-2">My Posted Jobs</h1>
-          <p className="text-slate-500">Manage your job listings</p>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">My Posted Jobs</h1>
+          <p className="text-sm sm:text-base text-slate-500">Manage your job listings</p>
         </div>
         
-        <div className="mt-4 md:mt-0 flex gap-2">
+        <div className="mt-4 sm:mt-0 flex flex-wrap gap-2">
           <Link href="/dashboard/jobs/create">
-            <Button size="sm">
+            <Button size="sm" className="h-9 px-3 whitespace-nowrap">
               <PlusCircle className="mr-2 h-4 w-4" />
               Post New Job
             </Button>
@@ -151,22 +151,23 @@ export default function JobsPage() {
             variant="outline" 
             size="sm"
             onClick={() => setShowFilters(!showFilters)}
+            className="h-9 px-3"
           >
             <Filter className="mr-2 h-4 w-4" />
-            {showFilters ? 'Hide Filters' : 'Show Filters'}
+            <span className="whitespace-nowrap">{showFilters ? 'Hide Filters' : 'Show Filters'}</span>
           </Button>
         </div>
       </div>
       
       {/* Search & Filters */}
-      <div className="mb-8">
+      <div className="mb-6 md:mb-8">
           <form onSubmit={handleSearch} className="space-y-4">
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1">
                 <div className="relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
-                    placeholder="Search jobs by title, company or keywords..."
+                    placeholder="Search jobs..."
                     className="pl-10"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -174,25 +175,28 @@ export default function JobsPage() {
                 </div>
               </div>
               
-              <Button type="submit">Search</Button>
-              <Button type="button" variant="outline" onClick={handleReset}>Reset</Button>
+              <div className="flex gap-2 w-full sm:w-auto">
+                <Button type="submit" className="flex-1 sm:flex-none">Search</Button>
+                <Button type="button" variant="outline" onClick={handleReset} className="flex-1 sm:flex-none">Reset</Button>
+              </div>
             </div>
             
             {showFilters && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 mt-4">
                 <div>
                   <label className="text-sm font-medium mb-1 block">Location</label>
                   <Input
                     placeholder="Any location"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
+                    className="h-9"
                   />
                 </div>
                 
                 <div>
                   <label className="text-sm font-medium mb-1 block">Industry</label>
                   <Select value={industry} onValueChange={setIndustry}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-9 w-full">
                       <SelectValue placeholder="Any industry" />
                     </SelectTrigger>
                     <SelectContent>
@@ -209,7 +213,7 @@ export default function JobsPage() {
                 <div>
                   <label className="text-sm font-medium mb-1 block">Job Type</label>
                   <Select value={jobType} onValueChange={setJobType}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-9 w-full">
                       <SelectValue placeholder="Any job type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -225,7 +229,7 @@ export default function JobsPage() {
                 <div>
                   <label className="text-sm font-medium mb-1 block">Experience Level</label>
                   <Select value={experienceLevel} onValueChange={setExperienceLevel}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-9 w-full">
                       <SelectValue placeholder="Any experience" />
                     </SelectTrigger>
                     <SelectContent>
@@ -241,7 +245,7 @@ export default function JobsPage() {
                 <div>
                   <label className="text-sm font-medium mb-1 block">Remote Work</label>
                   <Select value={isRemote} onValueChange={setIsRemote}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-9 w-full">
                       <SelectValue placeholder="Any workplace" />
                     </SelectTrigger>
                     <SelectContent>
@@ -258,16 +262,16 @@ export default function JobsPage() {
       
       {/* Results */}
       {isLoading ? (
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           {[1, 2, 3].map(i => (
             <Card key={i} className="w-full">
-              <CardContent className="">
-                <div className="space-y-3">
-                  <Skeleton className="h-8 w-1/3" />
+              <CardContent className="p-4 sm:p-6">
+                <div className="space-y-2 sm:space-y-3">
+                  <Skeleton className="h-6 sm:h-8 w-1/3" />
                   <Skeleton className="h-4 w-1/4" />
-                  <div className="flex space-x-4">
-                    <Skeleton className="h-4 w-1/5" />
-                    <Skeleton className="h-4 w-1/6" />
+                  <div className="flex flex-wrap gap-2 sm:space-x-4">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-4 w-24" />
                   </div>
                 </div>
               </CardContent>
@@ -276,7 +280,7 @@ export default function JobsPage() {
         </div>
       ) : error ? (
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="text-center">
               <p className="text-red-500">{error}</p>
               <Button onClick={() => loadJobs()} className="mt-4">Try Again</Button>
@@ -285,7 +289,7 @@ export default function JobsPage() {
         </Card>
       ) : jobs.length === 0 ? (
         <Card>
-          <CardContent className="p-10">
+          <CardContent className="p-6 sm:p-10">
             <div className="text-center">
               <h3 className="text-lg font-medium">You haven't posted any jobs yet</h3>
               <p className="text-slate-500 mt-2">Create your first job listing to get started</p>
@@ -299,23 +303,24 @@ export default function JobsPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           {jobs.map(job => (
             <JobCard key={job.id} job={job} isDashboard={true} />
           ))}
           
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
-            <div className="flex justify-center mt-8 gap-2">
+            <div className="flex flex-wrap justify-center items-center mt-6 md:mt-8 gap-2">
               <Button 
                 variant="outline" 
                 disabled={!pagination.hasPrevPage}
                 onClick={() => loadJobs(pagination.page - 1)}
+                className="min-w-[80px] h-10 px-3 text-sm"
               >
                 Previous
               </Button>
               
-              <div className="flex items-center px-4">
+              <div className="flex items-center px-2 md:px-4 py-2 text-sm">
                 <span>
                   Page {pagination.page} of {pagination.totalPages}
                 </span>
@@ -325,6 +330,7 @@ export default function JobsPage() {
                 variant="outline" 
                 disabled={!pagination.hasNextPage}
                 onClick={() => loadJobs(pagination.page + 1)}
+                className="min-w-[80px] h-10 px-3 text-sm"
               >
                 Next
               </Button>

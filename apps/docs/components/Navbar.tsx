@@ -1,3 +1,5 @@
+"use client";
+
 import { Search } from "./search";
 import React from "react";
 import { MainNav } from "./main-nav";
@@ -8,7 +10,7 @@ import { Badge } from "./ui/badge";
 function Navbar() {
   return (
     <div className="border-b">
-      <div className="flex h-16 items-center md:px-16 px-8 sticky top-0 z-10 bg-white ">
+      <div className="flex h-16 items-center md:px-16 px-4 sticky top-0 z-20 bg-white">
         <a href="/" className="flex items-center">
           <Image
             src={"/logo-black.svg"}
@@ -21,7 +23,8 @@ function Navbar() {
             Recruiter
           </Badge>
         </a>
-        <MainNav className="mx-6" />
+        {/* Navigation that adapts to screen size */}
+        <MainNav className="mx-6 hidden md:flex" />
         <div className="ml-auto flex items-center space-x-4">
           <UserNav />
         </div>

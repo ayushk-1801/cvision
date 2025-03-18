@@ -158,7 +158,7 @@ const JobCard = ({
 
               {job.salary && (
                 <Badge variant="outline" className="bg-slate-50">
-                  {job.salary && `₹${job.salary}`}
+                  {job.salary && `${job.salary}`}
                 </Badge>
               )}
             </div>

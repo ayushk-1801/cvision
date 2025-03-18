@@ -82,22 +82,22 @@ export default function CreateJobPage() {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6">Create New Job Position</h1>
+    <div className="container mx-auto py-4 px-4 sm:px-6 sm:py-6 lg:py-8">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Create New Job Position</h1>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 sm:mb-6">
           {error}
         </div>
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Job Details</CardTitle>
+      <Card className="shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl sm:text-2xl">Job Details</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
               <div className="space-y-2">
                 <Label htmlFor="title">Job Title *</Label>
                 <Input
@@ -123,7 +123,7 @@ export default function CreateJobPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
               <div className="space-y-2">
                 <Label htmlFor="location">Location *</Label>
                 <Input
@@ -143,7 +143,7 @@ export default function CreateJobPage() {
                   value={formData.industry}
                   onValueChange={(value) => handleSelectChange('industry', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className='w-full'>
                     <SelectValue placeholder="Select industry" />
                   </SelectTrigger>
                   <SelectContent>
@@ -157,7 +157,7 @@ export default function CreateJobPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
               <div className="space-y-2">
                 <Label htmlFor="jobType">Job Type *</Label>
                 <Select
@@ -165,7 +165,7 @@ export default function CreateJobPage() {
                   value={formData.jobType}
                   onValueChange={(value) => handleSelectChange('jobType', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className='w-full'>
                     <SelectValue placeholder="Select job type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -185,7 +185,7 @@ export default function CreateJobPage() {
                   value={formData.experienceLevel}
                   onValueChange={(value) => handleSelectChange('experienceLevel', value)}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className='w-full'>
                     <SelectValue placeholder="Select experience level" />
                   </SelectTrigger>
                   <SelectContent>
@@ -209,7 +209,7 @@ export default function CreateJobPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
               <div className="space-y-2">
                 <Label htmlFor="yearsOfExperience">Years of Experience</Label>
                 <Input
@@ -272,6 +272,7 @@ export default function CreateJobPage() {
                 placeholder="Describe the job responsibilities and details"
                 rows={5}
                 required
+                className="min-h-[100px]"
               />
             </div>
 
@@ -285,10 +286,11 @@ export default function CreateJobPage() {
                 placeholder="List the skills, qualifications, and experience required"
                 rows={5}
                 required
+                className="min-h-[100px]"
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
               <div className="space-y-2">
                 <Label htmlFor="applicationDeadline">Application Deadline</Label>
                 <Input
@@ -314,25 +316,30 @@ export default function CreateJobPage() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 py-2">
               <Checkbox 
                 id="isRemote" 
                 checked={formData.isRemote}
                 onCheckedChange={(checked) => handleCheckboxChange('isRemote', checked === true)}
               />
-              <Label htmlFor="isRemote">This is a remote position</Label>
+              <Label htmlFor="isRemote" className="text-sm sm:text-base">This is a remote position</Label>
             </div>
 
-            <CardFooter className="flex justify-end space-x-4 px-0 pb-0">
+            <CardFooter className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 px-0 pb-0 pt-4">
               <Button 
                 type="button" 
                 variant="outline" 
                 onClick={() => router.push('/dashboard/jobs')}
                 disabled={isLoading}
+                className="w-full sm:w-auto"
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isLoading}>
+              <Button 
+                type="submit" 
+                disabled={isLoading}
+                className="w-full sm:w-auto"
+              >
                 {isLoading ? 'Creating...' : 'Create Job'}
               </Button>
             </CardFooter>

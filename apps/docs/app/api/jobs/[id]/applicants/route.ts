@@ -4,21 +4,20 @@ import { getSession } from '@/server/users';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }  // Fix: Changed from Promise<{id: string}> to {id: string}
 ): Promise<NextResponse> {
   try {
     const session = await getSession();
     
-    // Check if user is authenticated
     if (!session || !session.user) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { error: 'Authentication required' },
         { status: 401 }
       );
     }
     
     const userId = session.user.id;
-    const jobId = (await params).id;
+    const jobId = params.id;  // Fix: Removed the await
     
     // First verify if the user is the recruiter for this job
     const job = await prisma.job.findUnique({
@@ -32,6 +31,7 @@ export async function GET(
       }
     });
     
+    // If job not found, return 404
     if (!job) {
       return NextResponse.json(
         { error: 'Job not found' },
