@@ -127,9 +127,7 @@ def is_valid_email(email):
 from langchain_groq import ChatGroq
 import os
 
-
-#Api is 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
-os.environ["GROQ_API_KEY"] = "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"
+os.environ["GROQ_API_KEY"] = ""
 
 
 llm = ChatGroq(temperature=0, model_name="llama3-8b-8192", model_kwargs={"response_format": {"type": "json_object"}})
