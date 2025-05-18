@@ -1,199 +1,108 @@
-# Turborepo + Prisma ORM starter
+# JobWise
 
-This is a example designed to help you quickly set up a Turborepo monorepo with a Next.js app and Prisma ORM. This is a community-maintained example. If you experience a problem, please submit a pull request with a fix. GitHub Issues will be closed.
+A brief description of your project. What it does and who it's for.
 
-## What's inside?
+## Tech Stack
 
-This turborepo includes the following packages/apps:
+- **Framework**: Next.js
+- **Monorepo**: Turborepo
+- **ORM**: Prisma
+- **Database**: MongoDB, PostgreSQL
+- **Language**: TypeScript
+- **Linting**: ESLint
+- **Formatting**: Prettier
+- **AI**: Python backend, GROQ, PyTorch, Modern Bert
 
-### Apps and packages
+## Features
 
-- `web`: a [Next.js](https://nextjs.org/) app
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/database`: [Prisma ORM](https://prisma.io/) to manage & access your database
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- User Authentication (Sign-up, Sign-in)
+- Job Listings
+- Job Application Submission (potentially with resume upload)
+- User Dashboard
+- AI-powered features (e.g., resume review, job matching)
+- Recruiter tools:
+    - Shortlist candidates with best matching profiles
+    - View extracted relevant information about candidates
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## How to Run
 
-### Utilities
+1. **Clone the repository:**
 
-This turborepo has some additional tools already setup for you:
+   ```bash
+   # Replace with your repository URL
+   git clone <your-repo-url>
+   cd <your-repo-name>
+   ```
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-- [Prisma ORM](https://prisma.io/) for accessing the database
-- [Docker Compose](https://docs.docker.com/compose/) for a local MySQL database
+2. **Install dependencies:**
 
-## Getting started
+   Choose your package manager and run the install command in the root directory. For example, with npm:
 
-Follow these steps to set up and run your Turborepo project with Prisma ORM:
+   ```bash
+   npm install
+   ```
 
-### 1. Create a Turborepo project
+   Or with yarn:
 
-Start by creating a new Turborepo project using the following command:
+   ```bash
+   yarn install
+   ```
 
-```sh
-npx create-turbo@latest -e with-prisma
-```
+3. **Set up environment variables:**
 
-Choose your desired package manager when prompted and a name for the app (e.g., `my-turborepo`). This will scaffold a new Turborepo project with Prisma ORM included and dependencies installed.
+   Copy the example environment files for the database and web app:
 
-Navigate to your project directory:
+   ```bash
+   cp .env.example ./packages/database/.env
+   cp .env.example ./apps/web/.env
+   cp .env.example ./apps/docs/.env
+   ```
 
-```bash
-cd ./my-turborepo
-```
+   Update the environment variables accordingly.
 
-### 2. Setup a local database with Docker Compose
+4. **Migrate your database:**
 
-We use [Prisma ORM](https://prisma.io/) to manage and access our database. As such you will need a database for this project, either locally or hosted in the cloud.
+   Create and apply database migrations:
 
-To make this process easier, a [`docker-compose.yml` file](./docker-compose.yml) is included to setup a MySQL server locally with a new database named `turborepo`:
+   ```bash
+   # Using npm
+   npm run db:migrate:dev
+   ```
 
-Start the MySQL database using Docker Compose:
+   (Or `yarn run db:migrate:dev`, `pnpm run db:migrate:dev`, `bun run db:migrate:dev`)
 
-```sh
-docker-compose up -d
-```
+   You'll be prompted to name the migration.
 
-To change the default database name, update the `MYSQL_DATABASE` environment variable in the [`docker-compose.yml` file](/docker-compose.yml).
+5. **Build the application:**
 
-### 3. Setup environment variables
+   ```bash
+   # Using npm
+   npm run build
+   ```
 
-Once the database is ready, copy the `.env.example` file to the [`/packages/database`](./packages/database/) and [`/apps/web`](./apps/web/) directories as `.env`:
+   (Or `yarn run build`, `pnpm run build`, `bun run build`)
 
-```bash
-cp .env.example ./packages/database/.env
-cp .env.example ./apps/web/.env
-```
+6. **Start the development server:**
 
-This ensures Prisma has access to the `DATABASE_URL` environment variable, which is required to connect to your database.
+   ```bash
+   # Using npm (from the root or apps/web)
+   npm run dev
+   ```
 
-If you added a custom database name, or use a cloud based database, you will need to update the `DATABASE_URL` in your `.env` accordingly.
+   ```bash
+   cd model/
+   python3 API.py
+   ```
 
-### 4. Migrate your database
+   The application will typically be available at `http://localhost:3001`.
 
-Once your database is running, you’ll need to create and apply migrations to set up the necessary tables. Run the database migration command:
+## AI Usage Explanation
 
-```bash
-# Using npm
-npm run db:migrate:dev
-```
+This project utilizes AI for [Please specify how AI is used. e.g., "processing and analyzing resumes uploaded by users", "matching candidates to job descriptions", "providing automated feedback on resume quality"].
 
-<details>
+The AI components are primarily located in:
 
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
+- `model/API.py`: This seems to be the core Python backend for AI functionalities.
+- `apps/web/lib/gemini.ts`: This might be a client-side library or service to interact with an AI model or the Python backend.
 
-```bash
-# Using yarn
-yarn run db:migrate:dev
-
-# Using pnpm
-pnpm run db:migrate:dev
-
-# Using bun
-bun run db:migrate:dev
-```
-
-</details>
-
-You’ll be prompted to name the migration. Once you provide a name, Prisma will create and apply the migration to your database.
-
-> Note: The `db:migrate:dev` script (located in [packages/database/package.json](/packages/database/package.json)) uses [Prisma Migrate](https://www.prisma.io/migrate) under the hood.
-
-For production environments, always push schema changes to your database using the [`prisma migrate deploy` command](https://www.prisma.io/docs/orm/prisma-client/deployment/deploy-database-changes-with-prisma-migrate). You can find an example `db:migrate:deploy` script in the [`package.json` file](/packages/database/package.json) of the `database` package.
-
-### 5. Seed your database
-
-To populate your database with initial or fake data, use [Prisma's seeding functionality](https://www.prisma.io/docs/guides/database/seed-database).
-
-Update the seed script located at [`packages/database/src/seed.ts`](/packages/database/src/seed.ts) to include any additional data that you want to seed. Once edited, run the seed command:
-
-```bash
-# Using npm
-npm run db:seed
-```
-
-<details>
-
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
-
-```bash
-# Using yarn
-yarn run db:seed
-
-# Using pnpm
-pnpm run db:seed
-
-# Using bun
-bun run db:seed
-```
-
-</details>
-
-### 6. Build your application
-
-To build all apps and packages in the monorepo, run:
-
-```bash
-# Using npm
-npm run build
-```
-
-<details>
-
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
-
-```bash
-# Using yarn
-yarn run build
-
-# Using pnpm
-pnpm run build
-
-# Using bun
-bun run build
-```
-
-</details>
-
-### 7. Start the application
-
-Finally, start your application with:
-
-```bash
-yarn run dev
-```
-
-<details>
-
-<summary>Expand for <code>yarn</code>, <code>pnpm</code> or <code>bun</code></summary>
-
-```bash
-# Using yarn
-yarn run dev
-
-# Using pnpm
-pnpm run dev
-
-# Using bun
-bun run dev
-```
-
-</details>
-
-Your app will be running at `http://localhost:3000`. Open it in your browser to see it in action!
-
-You can also read the official [detailed step-by-step guide from Prisma ORM](https://pris.ly/guide/turborepo?utm_campaign=turborepo-example) to build a project from scratch using Turborepo and Prisma ORM.
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+Please provide more details on the specific AI models used, their purpose, and how they integrate with the rest of the application.
