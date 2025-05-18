@@ -2,8 +2,8 @@ import "./globals.css";
 import { GeistSans } from 'geist/font/sans';
 
 export const metadata = {
-  title: 'CVision',
-  description: 'Computer Vision Platform',
+  title: 'JobWise',
+  description: 'Job Matching Platform',
 };
 
 export default function RootLayout({
@@ -12,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={GeistSans.className}>
         {children}
       </body>
