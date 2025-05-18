@@ -1,17 +1,86 @@
 # JobWise
 
-A brief description of your project. What it does and who it's for.
+**JobWise** is an intelligent job matching and recruitment assistant platform designed for both **job seekers** and **recruiters**. Powered by AI, it helps users enhance their resumes, discover relevant job opportunities, and empowers recruiters to efficiently find the best talent with precision.
 
-## Tech Stack
+Whether you're a recent graduate, a mid-career professional looking for a switch, or a recruiter overwhelmed with applications—JobWise provides smart, data-driven assistance to make the process smoother, faster, and more accurate.
 
-- **Framework**: Next.js
-- **Monorepo**: Turborepo
-- **ORM**: Prisma
-- **Database**: MongoDB, PostgreSQL
-- **Language**: TypeScript
-- **Linting**: ESLint
-- **Formatting**: Prettier
-- **AI**: Python backend, GROQ, PyTorch, Modern Bert
+---
+
+## ✨ Key Highlights
+
+* 🔍 **AI-Powered Resume Evaluation**: Upload your resume to receive instant feedback on structure, tone, and keyword optimization.
+* 🎯 **Smart Job Matching**: Get matched with jobs tailored to your skills, experience, and goals.
+* 🧠 **Recruiter Dashboard**: Employers can shortlist candidates with the highest compatibility scores and view AI-extracted details at a glance.
+* 📊 **Intuitive Dashboard**: Simple, modern UI for both candidates and recruiters.
+
+
+## 🚀 Tech Stack
+
+This project leverages a modern web stack, combining **React-based frontend**, **Python AI backend**, and **monorepo architecture** for scalability and developer productivity.
+
+| Layer         | Stack                                                     |
+| ------------- | --------------------------------------------------------- |
+| Frontend      | Next.js, Tailwind CSS, TypeScript                         |
+| Backend       | Node.js, tRPC, Python (Flask API)                         |
+| AI/ML         | PyTorch, Modern BERT, GROQ                                |
+| Database      | MongoDB (for resume data), PostgreSQL (for job/user data) |
+| ORM           | Prisma                                                    |
+| Monorepo Tool | Turborepo                                                 |
+| Dev Tools     | ESLint, Prettier                                          |
+
+---
+
+## 📦 Features Overview
+
+### 👤 For Job Seekers
+
+* Sign up and build a profile
+* Upload your resume (PDF)
+* Get AI-generated suggestions to improve your resume
+* View job matches ranked by fit score
+* Track applied jobs and responses
+
+### 🧑‍💼 For Recruiters
+
+* Create job postings
+* View and filter applicants with resume summaries
+* Use AI-powered shortlisting to quickly identify top candidates
+* Access detailed candidate insights (skills, experience, alignment with JD)
+
+---
+
+## 🧠 AI Components
+
+The intelligence behind JobWise lies in its AI subsystems:
+
+### `model/API.py`
+
+* Built with Python and PyTorch
+* Extracts structured info from resumes (skills, experiences, education)
+* Compares resume against job descriptions using BERT embeddings
+* Outputs relevance score and improvement feedback
+
+### `apps/web/lib/gemini.ts`
+
+* Interacts with AI APIs (like Google Gemini or GPT-like models)
+* Provides grammar and tone suggestions
+* Extracts high-level insights and recommendations from resumes
+
+---
+
+## 🏗️ Project Structure
+
+```
+jobwise/
+├── apps/
+│   ├── web/        # Next.js frontend
+│   └── docs/       # Documentation site (optional)
+├── packages/
+│   └── database/   # Prisma ORM + env config
+├── model/          # Python AI backend
+├── .env.example    # Environment variable boilerplate
+└── turbo.json      # Turborepo config
+```
 
 ## Features
 
@@ -29,9 +98,8 @@ A brief description of your project. What it does and who it's for.
 1. **Clone the repository:**
 
    ```bash
-   # Replace with your repository URL
-   git clone <your-repo-url>
-   cd <your-repo-name>
+   git clone https://github.com/ayushk-1801/cvision
+   cd cvision
    ```
 
 2. **Install dependencies:**
@@ -94,15 +162,14 @@ A brief description of your project. What it does and who it's for.
    python3 API.py
    ```
 
-   The application will typically be available at `http://localhost:3001`.
+   The application will be available at `http://localhost:3001`.
 
-## AI Usage Explanation
+## Demo
 
-This project utilizes AI for [Please specify how AI is used. e.g., "processing and analyzing resumes uploaded by users", "matching candidates to job descriptions", "providing automated feedback on resume quality"].
+Live demo: [https://jobwise.app](https://jobwise.app)
 
-The AI components are primarily located in:
+## Screenshots
 
-- `model/API.py`: This seems to be the core Python backend for AI functionalities.
-- `apps/web/lib/gemini.ts`: This might be a client-side library or service to interact with an AI model or the Python backend.
-
-Please provide more details on the specific AI models used, their purpose, and how they integrate with the rest of the application.
+![Landing Page](./screenshots/homepage1.png)
+![Home page user](./screenshots/homepage2.png)
+![Resume Optimisation](./screenshots/opti.png)
