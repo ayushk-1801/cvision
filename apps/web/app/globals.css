@@ -2,6 +2,9 @@
 @source "./node_modules/@daveyplate/better-auth-ui/dist/**/*.{js,ts,jsx,tsx,mdx}";
 
 @plugin "tailwindcss-animate";
+nextjs-portal {
+  display: none;
+}
 
 @custom-variant dark (&:is(.dark *));
 

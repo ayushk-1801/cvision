@@ -287,7 +287,7 @@ def compute_similarity(resume_pdf_path , job_title , JOB_DESCRIPTION , model, to
         job_embeds = tokenize_and_embed(job_skills)
         sim_skills = torch.cosine_similarity(cand_embeds, job_embeds)
     except:
-        sim_edu = 0.5
+        sim_skills = 0.5
         skills_use = False
     
     exp_Use = True
@@ -296,7 +296,7 @@ def compute_similarity(resume_pdf_path , job_title , JOB_DESCRIPTION , model, to
         job_embeds = tokenize_and_embed(job_exp)
         sim_exp = torch.cosine_similarity(cand_embeds, job_embeds)
     except:
-        sim_edu = 0.5
+        sim_exp = 0.5
         exp_Use = False
 
 

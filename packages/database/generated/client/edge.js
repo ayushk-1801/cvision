@@ -225,7 +225,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/mnt/home/hackathons/cvision/packages/database/generated/client",
+      "value": "/mnt/5C38BB7638BB4E30/home/hackathons/cvision/packages/database/generated/client",
       "fromEnvVar": null
     },
     "config": {
@@ -239,12 +239,12 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/mnt/home/hackathons/cvision/packages/database/prisma/schema.prisma",
+    "sourceFilePath": "/mnt/5C38BB7638BB4E30/home/hackathons/cvision/packages/database/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
     "rootEnvPath": null,
-    "schemaEnvPath": "../../../../apps/docs/.env"
+    "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../prisma",
   "clientVersion": "6.4.1",

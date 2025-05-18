@@ -5800,7 +5800,7 @@ var require_client = __commonJS({
           "value": "prisma-client-js"
         },
         "output": {
-          "value": "/mnt/home/hackathons/cvision/packages/database/generated/client",
+          "value": "/mnt/5C38BB7638BB4E30/home/hackathons/cvision/packages/database/generated/client",
           "fromEnvVar": null
         },
         "config": {
@@ -5814,12 +5814,12 @@ var require_client = __commonJS({
           }
         ],
         "previewFeatures": [],
-        "sourceFilePath": "/mnt/home/hackathons/cvision/packages/database/prisma/schema.prisma",
+        "sourceFilePath": "/mnt/5C38BB7638BB4E30/home/hackathons/cvision/packages/database/prisma/schema.prisma",
         "isCustomOutput": true
       },
       "relativeEnvPaths": {
         "rootEnvPath": null,
-        "schemaEnvPath": "../../../../apps/docs/.env"
+        "schemaEnvPath": "../../.env"
       },
       "relativePath": "../../prisma",
       "clientVersion": "6.4.1",
@@ -5977,8 +5977,8 @@ model Application {
     config2.dirname = __dirname;
     if (!fs2.existsSync(path.join(__dirname, "schema.prisma"))) {
       const alternativePaths = [
-        "../../packages/database/generated/client",
-        "../packages/database/generated/client"
+        "generated/client",
+        "client"
       ];
       const alternativePath = alternativePaths.find((altPath) => {
         return fs2.existsSync(path.join(process.cwd(), altPath, "schema.prisma"));
@@ -5999,9 +5999,9 @@ model Application {
     exports2.PrismaClient = PrismaClient2;
     Object.assign(exports2, Prisma);
     path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
-    path.join(process.cwd(), "../../packages/database/generated/client/libquery_engine-debian-openssl-3.0.x.so.node");
+    path.join(process.cwd(), "generated/client/libquery_engine-debian-openssl-3.0.x.so.node");
     path.join(__dirname, "schema.prisma");
-    path.join(process.cwd(), "../../packages/database/generated/client/schema.prisma");
+    path.join(process.cwd(), "generated/client/schema.prisma");
   }
 });
 
