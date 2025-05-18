@@ -61,6 +61,11 @@ class FUllSimlarity (BaseModel):
     reason: Optional[str] = Field(description="Reason for the similarity score")
     projects: Optional[str] = Field(description="Relevant skills user has used in projects and work experience")
 
+class ResumeReviewResponse(BaseModel):
+    """Response model for resume review and optimization"""
+    review: Optional[str] = Field(description="Constructive review of the resume.")
+    optimization: Optional[str] = Field(description="Suggestions for optimizing the resume.")
+
 import PyPDF2
 # import docx
 import io
@@ -190,6 +195,30 @@ sim_template= PromptTemplate(
 llm_sim = ChatGroq(temperature=0, model_name="gemma2-9b-it", model_kwargs={"response_format": {"type": "json_object"}})
 
 llm_similarity = sim_template | llm_sim | parser_sim
+
+# Resume Review and Optimization Chain
+parser_review = PydanticOutputParser(pydantic_object=ResumeReviewResponse)
+
+prompt_template_review = """\
+You are an expert resume reviewer and career coach.
+Please provide a constructive review of the following resume.
+Then, suggest specific, actionable optimizations tailored to the content and structure of THIS resume to improve its effectiveness. Avoid generic advice.
+Focus on clarity, impact, and alignment with best practices, directly referencing sections or points from the resume provided.
+{format_instructions}
+
+Resume text:
+{resume_text}
+"""
+
+prompt_review = PromptTemplate(
+    template=prompt_template_review,
+    input_variables=["resume_text"],
+    partial_variables={"format_instructions": parser_review.get_format_instructions()},
+)
+
+# Using the same llm instance as for resume parsing, as it's suitable for generation tasks
+llm_resume_reviewer = prompt_review | llm | parser_review
+
 
 from transformers import AutoTokenizer, AutoModelForMaskedLM , BertTokenizer, BertModel
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
@@ -326,10 +355,20 @@ def compute_similarity(resume_pdf_path , job_title , JOB_DESCRIPTION , model, to
 
 
 from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware # Added import
 import shutil
 
 # FastAPI app
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 @app.post("/submit_application/")
 async def submit_application(
@@ -363,6 +402,26 @@ async def submit_application(
     print(output)
     
     return output
+
+# New endpoint for resume review
+@app.post("/review_resume/")
+async def review_resume_endpoint(
+    resume_file: UploadFile = File(...)
+):
+    folder = "resume_reviews" # Storing in a different folder or handle as temp
+    os.makedirs(folder, exist_ok=True)
+    resume_pdf_path = os.path.join(folder, resume_file.filename)
+    with open(resume_pdf_path, "wb") as buffer:
+        shutil.copyfileobj(resume_file.file, buffer)
+
+    resume_text = extract_resume_text(resume_pdf_path)
+    
+    review_output = llm_resume_reviewer.invoke({"resume_text": resume_text})
+    
+    # Clean up the saved file after processing if it's temporary
+    # os.remove(resume_pdf_path) 
+    
+    return review_output
 
 #rUNNING THE API
 

@@ -23,6 +23,12 @@ export function MainNav({
       >
         Applications
       </Link>
+      <Link
+        href="/dashboard/optimize-resume"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+      >
+        Optimize Resume
+      </Link>
     </nav>
   )
 }

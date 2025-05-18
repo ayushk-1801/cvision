@@ -2,8 +2,8 @@ import "./globals.css";
 import { GeistSans } from 'geist/font/sans';
 
 export const metadata = {
-  title: 'CVision Recruiter',
-  description: 'Computer Vision Platform',
+  title: 'JobWise Recruiter',
+  description: 'Job Matching Platform',
 };
 
 export default function RootLayout({
