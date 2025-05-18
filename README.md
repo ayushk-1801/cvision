@@ -170,6 +170,6 @@ Live demo: [https://jobwise.app](https://jobwise.app)
 
 ## Screenshots
 
-![Landing Page](./screenshots/homepage1.png)
-![Home page user](./screenshots/homepage2.png)
-![Resume Optimisation](./screenshots/opti.png)
+![Landing Page](./homepage1.png)
+![Home page user](./homepage2.png)
+![Resume Optimisation](./opti.png)
