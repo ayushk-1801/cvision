@@ -20,10 +20,10 @@ This project leverages a modern web stack, combining **React-based frontend**, *
 
 | Layer         | Stack                                                     |
 | ------------- | --------------------------------------------------------- |
-| Frontend      | Next.js, Tailwind CSS, TypeScript                         |
-| Backend       | Node.js, tRPC, Python (Flask API)                         |
+| Frontend      | Next.js(React.js) , Tailwind CSS, TypeScript                         |
+| Backend       | Node.js, Python (FastAPI API)                         |
 | AI/ML         | PyTorch, Modern BERT, GROQ                                |
-| Database      | MongoDB (for resume data), PostgreSQL (for job/user data) |
+| Database      | MongoDB, PostgreSQL |
 | ORM           | Prisma                                                    |
 | Monorepo Tool | Turborepo                                                 |
 | Dev Tools     | ESLint, Prettier                                          |
@@ -166,7 +166,7 @@ jobwise/
 
 ## Demo
 
-Live demo: [https://jobwise.app](https://jobwise.app)
+Live demo: [https://jobwise-hiring.vercel.app/](https://jobwise-hiring.vercel.app/)
 
 ## Screenshots
 
